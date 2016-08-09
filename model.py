@@ -111,35 +111,35 @@ class Note(db.Model):
 ################################################################################
 #Model definitions (2.0 Features)
 
-class Channel(db.Model):
-    """Channels shown in articles"""
+# class Channel(db.Model):
+#     """Channels shown in articles"""
 
-    __tablename__ = "channels"
+#     __tablename__ = "channels"
 
-    channel_id = db.Column(db.Integer,
-                        autoincrement=True,
-                        primary_key=True)
-    channel_name = db.Column(db.String(20), nullable=False)
+#     channel_id = db.Column(db.Integer,
+#                         autoincrement=True,
+#                         primary_key=True)
+#     channel_name = db.Column(db.String(20), nullable=False)
 
-class Comments(db.Model):
-    """Stores comments made by user in each channel"""
+# class Comments(db.Model):
+#     """Stores comments made by user in each channel"""
     
-    __tablename__ = "comments"
+#     __tablename__ = "comments"
 
-    comment_id = db.Column(db.Integer,
-                        autoincrement=True,
-                        primary_key=True)
-    user_id = db.Column(db.Integer,
-                        db.ForeignKey('users.user_id'), nullable=False)
-    article_id = db.Column(db.Integer,
-                        db.ForeignKey('articles.article_id'), nullable=False)
-    channel_id = db.Column(db.Integer,
-                        db.ForeignKey('channels.channel_id'), nullable=False)
-    phrase_id = db.Column(db.Integer,
-                        db.ForeignKey('phrases.phrase_id'), nullable=False)
-    comment = db.Column(db.Text, nullable=False)
+#     comment_id = db.Column(db.Integer,
+#                         autoincrement=True,
+#                         primary_key=True)
+#     user_id = db.Column(db.Integer,
+#                         db.ForeignKey('users.user_id'), nullable=False)
+#     article_id = db.Column(db.Integer,
+#                         db.ForeignKey('articles.article_id'), nullable=False)
+#     channel_id = db.Column(db.Integer,
+#                         db.ForeignKey('channels.channel_id'), nullable=False)
+#     phrase_id = db.Column(db.Integer,
+#                         db.ForeignKey('phrases.phrase_id'), nullable=False)
+#     comment = db.Column(db.Text, nullable=False)
 
-    article = db.relationship("Article")
+#     article = db.relationship("Article")
 
 
 #####################################################################
