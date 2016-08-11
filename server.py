@@ -12,13 +12,19 @@ from flask import (Flask, render_template, redirect, request, flash, session)
 
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import connect_to_db, db
+from model import connect_to_db, db, User, Article, UserArticle, Phrase, Note
 
+# This allows you to access the variables store in the environment on your 
+# computer. 
+import os 
 
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC"
+
+#Google translate key for API
+key = os.environ['GOOGLE_TRANSLATE_KEY']
 
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
 # This is horrible. Fix this so that, instead, it raises an error.
@@ -42,11 +48,31 @@ def signup_process():
     """Users sign up for an account."""
     
     if request.method == "GET":
+        #Show the signup form to the user. 
         return render_template("signup_form.html")
-    
+        
     if request.method == "POST":
-        pass
-    pass
+        #Process the sign up information and add user to database.
+        first_name = request.form["firstname"]
+        last_name = request.form["lastname"]
+        email = request.form["email"]
+        phone = request.form["phone"]
+        username = request.form["username"]
+        password = request.form["password"]
+        #Change later if expanding to other language. Now just hard code. 
+        language = "Spanish"
+        language_level = request.form["langlevel"]
+
+        new_user = User(email=email, username=username, password=password,
+                        first_name=first_name, last_name=last_name,
+                        phone=phone, language=language, 
+                        language_level=language_level)
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash("Username: %s has been added." % username)
+
+        return redirect("/login")
 
 # Not sure if this will just be part of the profile or the signup process. 
 # @app.route('/preferences')
@@ -62,26 +88,83 @@ def login():
         return render_template("login_form.html")
     
     if request.method == "POST":
-        pass
-    pass
+        print "Im here!"
+        username = request.form["username"]
+        password = request.form["password"]
+
+        user = User.query.filter_by(username=username).first()
+
+        if not user:
+            flash("Invalid username.")
+            return redirect("/login")
+        
+        if user.password != password:
+            flash("Incorrect password.")
+            return redirect("/login")
+
+        session["user_id"] = user.user_id
+
+        flash("You are logged into Parrot!")
+        print "Im here!"
+
+        # return redirect("/profile/%s" % user.user_id)
+        return redirect("/")
 
 
-@app.route('/profile/<int:user_id>')
-def profile():
-    """Users have a dashboard profile page that displays their name, previously
-    read articles, recommended articles."""
-    pass
+# @app.route('/profile/<int:user_id>')
+# def profile():
+#     """Users have a dashboard profile page that displays their name, previously
+#     read articles, recommended articles."""
+    
+#     return render_template("dashboard.html")
 
-@app.route('/search')
+@app.route('/translate')
 def search_form():
     """Form to allow user to search through articles."""
-    pass
+    return render_template("translate_form.html")
 
 
-@app.route('/article/<int:article_id>')
-def article(): 
-    """Page where article will be rendered and user can start translating."""
-    pass
+# @app.route('/article/<int:article_id>')
+# def article(): 
+#     """Page where article will be rendered and user can start translating."""
+#     pass
+
+
+@app.route('/test', methods = ["POST"])
+def testing():
+    """In this url is in the following format:
+    https://www.googleapis.com/language/translate/v2?parameters
+        parameters include: 
+            key: the api key defined above
+            source: the language of the article (es = Spanish)
+            target: the language you want translated to (en = English)
+            q: Specifies the text to translate.
+    """ 
+    phrase = request.form.get("phrase")
+
+    word_list = phrase.split(' ')
+
+    google_url = "https://www.googleapis.com/language/translate/v2?key=%s&source=es&target=en&q=" % (key)
+    
+    print google_url
+
+    text = "%20".join(word_list)
+
+    print text
+    #The results I get back here is going to be JSON
+    results = request(google_url + text)
+
+    print results
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/logout')
 def logout_user():
