@@ -119,20 +119,14 @@ def login():
     
 #     return render_template("dashboard.html")
 
-@app.route('/translate')
-def search_form():
-    """Form to allow user to search through articles."""
-    return render_template("translate.html")
-
-
 # @app.route('/article/<int:article_id>')
 # def article(): 
 #     """Page where article will be rendered and user can start translating."""
 #     pass
 
 
-@app.route('/translate', methods = ["POST"])
-def testing():
+@app.route('/translate', methods = ["GET", "POST"])
+def translating():
     """In this url is in the following format:
     https://www.googleapis.com/language/translate/v2?parameters
         parameters include: 
@@ -141,43 +135,37 @@ def testing():
             target: the language you want translated to (en = English)
             q: Specifies the text to translate.
     """ 
-    #Getting the value in the dictionary sent by JS. 
-    phrase = request.form.get("phrase")
 
-    #Splitting the words into a list. 
-    word_list = phrase.split(' ')
-
-    #Googles url, pulling secret key into url. 
-    google_url = "https://www.googleapis.com/language/translate/v2?key=%s&source=es&target=en&q=" % (key)
-
-    #Google requires words separated by %20. 
-    text = "%20".join(word_list)
-
-    #The results I get back here is going to be JSON
-    results = requests.get(google_url + text)
-
-    #Converts the results from the http response object from json to a dictionary.
-    dictresults= json.loads(results.text)
-
-    #Gets the translated text out of the dictionary in list in dictionary.
-    rawtranslation= dictresults['data']['translations'][0]['translatedText']
-
-    #The rawtranslation uses &#39; instead of apostrophes. Replaced them.
-    translation= rawtranslation.replace("&#39;","'")
+    if request.method == "GET":
+        return render_template("translate.html")
 
 
+    if request.method == "POST":
+        #Getting the value in the dictionary sent by JS. 
+        phrase = request.form.get("phrase")
 
+        #Splitting the words into a list. 
+        word_list = phrase.split(' ')
 
-    return translation
+        #Googles url, pulling secret key into url. 
+        google_url = "https://www.googleapis.com/language/translate/v2?key=%s&source=es&target=en&q=" % (key)
 
+        #Google requires words separated by %20. 
+        text = "%20".join(word_list)
 
+        #The results I get back here is going to be JSON
+        results = requests.get(google_url + text)
 
+        #Converts the results from the http response object from json to a dictionary.
+        dictresults= json.loads(results.text)
 
+        #Gets the translated text out of the dictionary in list in dictionary.
+        rawtranslation= dictresults['data']['translations'][0]['translatedText']
 
+        #The rawtranslation uses &#39; instead of apostrophes. Replaced them.
+        translation= rawtranslation.replace("&#39;","'")
 
-
-
-
+        return translation
 
 
 @app.route('/logout')
