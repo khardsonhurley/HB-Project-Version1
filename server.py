@@ -14,9 +14,12 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db, User, Article, UserArticle, Phrase, Note
 
+import requests 
 # This allows you to access the variables store in the environment on your 
 # computer. 
 import os 
+
+import json 
 
 app = Flask(__name__)
 
@@ -88,7 +91,6 @@ def login():
         return render_template("login_form.html")
     
     if request.method == "POST":
-        print "Im here!"
         username = request.form["username"]
         password = request.form["password"]
 
@@ -104,8 +106,7 @@ def login():
 
         session["user_id"] = user.user_id
 
-        flash("You are logged into Parrot!")
-        print "Im here!"
+        flash("You are logged in to Parrot!")
 
         # return redirect("/profile/%s" % user.user_id)
         return redirect("/")
@@ -121,7 +122,7 @@ def login():
 @app.route('/translate')
 def search_form():
     """Form to allow user to search through articles."""
-    return render_template("translate_form.html")
+    return render_template("translate.html")
 
 
 # @app.route('/article/<int:article_id>')
@@ -130,7 +131,7 @@ def search_form():
 #     pass
 
 
-@app.route('/test', methods = ["POST"])
+@app.route('/translate', methods = ["POST"])
 def testing():
     """In this url is in the following format:
     https://www.googleapis.com/language/translate/v2?parameters
@@ -140,21 +141,34 @@ def testing():
             target: the language you want translated to (en = English)
             q: Specifies the text to translate.
     """ 
+    #Getting the value in the dictionary sent by JS. 
     phrase = request.form.get("phrase")
 
+    #Splitting the words into a list. 
     word_list = phrase.split(' ')
 
+    #Googles url, pulling secret key into url. 
     google_url = "https://www.googleapis.com/language/translate/v2?key=%s&source=es&target=en&q=" % (key)
-    
-    print google_url
 
+    #Google requires words separated by %20. 
     text = "%20".join(word_list)
 
-    print text
     #The results I get back here is going to be JSON
-    results = request(google_url + text)
+    results = requests.get(google_url + text)
 
-    print results
+    #Converts the results from the http response object from json to a dictionary.
+    dictresults= json.loads(results.text)
+
+    #Gets the translated text out of the dictionary in list in dictionary.
+    rawtranslation= dictresults['data']['translations'][0]['translatedText']
+
+    #The rawtranslation uses &#39; instead of apostrophes. Replaced them.
+    translation= rawtranslation.replace("&#39;","'")
+
+
+
+
+    return translation
 
 
 
@@ -171,7 +185,7 @@ def logout_user():
     """Log out the user and delete user from session"""
     
     flash('You have successfully logged out.')
-    del session['user']
+    del session['user_id']
 
     return redirect("/")
 
