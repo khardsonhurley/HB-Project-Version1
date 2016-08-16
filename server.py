@@ -12,7 +12,7 @@ from flask import (Flask, render_template, redirect, request, flash, session)
 
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import connect_to_db, db, User, Article, UserArticle, Phrase, Note
+from model import connect_to_db, db, User, Article, UserArticle, Phrase, Note, UserPreference, Preference
 
 import requests 
 # This allows you to access the variables store in the environment on your 
@@ -40,12 +40,6 @@ def index():
 
     return render_template("home.html")
 
-@app.route('/startpage')
-def startpage():
-    """Start page where user can chose log in or sign up."""
-
-    return render_template("start_page.html")
-
 @app.route('/signup', methods=["GET", "POST"])
 def signup_process(): 
     """Users sign up for an account."""
@@ -65,28 +59,67 @@ def signup_process():
         #Change later if expanding to other language. Now just hard code. 
         language = "Spanish"
         language_level = request.form["langlevel"]
-
+        #Creates new user. LATER CHECK IF USER EXISTS!! 
         new_user = User(email=email, username=username, password=password,
                         first_name=first_name, last_name=last_name,
                         phone=phone, language=language, 
                         language_level=language_level)
+
         db.session.add(new_user)
         db.session.commit()
 
+        session["user_id"] = new_user.user_id
+
         flash("Username: %s has been added." % username)
 
-        return redirect("/login")
+        return redirect("/preferences/%s" % new_user.user_id)
 
-# Not sure if this will just be part of the profile or the signup process. 
-# @app.route('/preferences')
-# def preferences():
-#     """After user initiates sign up process, they enter their preferences 
-#     (topics they are interested in)."""
-#     pass
+
+
+@app.route('/preferences/<int:user_id>', methods=["GET","POST"])
+def set_preferences(user_id):
+    """After user initiates sign up process, they enter their preferences 
+    (topics they are interested in)."""
+    
+    if request.method == "GET":
+        user = User.query.get(user_id)
+        preferences = ['']
+        return render_template("preferences.html", user=user)
+
+    if request.method == "POST":
+
+        #Later, for "adjust preferences" delete all from database and recreate.
+
+        #Getting the user_id from the session. 
+        user_id = session.get("user_id")
+
+        #Getting the user's preferences from the form. 
+        preference1 = request.form['preference_1']
+        preference2 = request.form['preference_2']
+        preference3 = request.form['preference_3']
+
+        #Creating UserPreference objects with the new preferences. 
+        userpreference1 = UserPreference(user_id=user_id, 
+                                        preference_code=preference1, rank=1)
+        userpreference2 = UserPreference(user_id=user_id, 
+                                        preference_code=preference2, rank=2)
+        userpreference3 = UserPreference(user_id=user_id,
+                                        preference_code=preference3, rank=3)
+        
+        #Can I add them all at once? 
+        db.session.add(userpreference1)
+        db.session.add(userpreference2)
+        db.session.add(userpreference3)
+
+        db.session.commit()
+
+        return redirect('/profile/%s' % user_id)
+
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
     """Users who already have an account can log in"""
+
     if request.method == "GET":
         return render_template("login_form.html")
     
@@ -109,15 +142,17 @@ def login():
         flash("You are logged in to Parrot!")
 
         # return redirect("/profile/%s" % user.user_id)
-        return redirect("/")
+        return redirect("/profile/%s" % user.user_id)
 
 
-# @app.route('/profile/<int:user_id>')
-# def profile():
-#     """Users have a dashboard profile page that displays their name, previously
-#     read articles, recommended articles."""
+@app.route('/profile/<int:user_id>')
+def profile(user_id):
+    """Users have a dashboard profile page that displays their name, previously
+    read articles, recommended articles."""
     
-#     return render_template("dashboard.html")
+    user = User.query.get(user_id)
+    print user.preferences 
+    return render_template("profile.html", user=user)
 
 # @app.route('/article/<int:article_id>')
 # def article(): 
@@ -142,6 +177,7 @@ def translating():
 
     if request.method == "POST":
         #Getting the value in the dictionary sent by JS. 
+        print(request.form)
         phrase = request.form.get("phrase")
 
         #Splitting the words into a list. 

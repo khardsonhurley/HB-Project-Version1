@@ -31,7 +31,12 @@ class User(db.Model):
     ##### Relationships #####
     #Note that from the articles table if you call on 'users' it will return a
     #list of article objects for that user. 
-    article = db.relationship('Article', secondary= 'user_articles', backref= 'users')
+    articles = db.relationship('Article', secondary= 'user_articles', 
+                                backref= 'users')
+
+    preferences = db.relationship('Preference', 
+                                  secondary='user_preferences',
+                                  backref='users')
 
 class Article(db.Model):
     """Articles available to users."""
@@ -60,6 +65,31 @@ class UserArticle(db.Model):
                         db.ForeignKey('articles.article_id'), nullable=False)
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.user_id'), nullable=False)
+
+class Preference(db.Model):
+    """Stores all article preferences."""
+
+    __tablename__ = "preferences"
+
+    preference_code = db.Column(db.String(30), primary_key=True)
+    description = db.Column(db.Text, nullable=True)
+
+
+class UserPreference(db.Model):
+    """Association table between users and preferences. Shows which preferences
+    each user chose.""" 
+
+    __tablename__= "user_preferences"
+
+    user_preference_id = db.Column(db.Integer, 
+                        autoincrement=True,
+                        primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    preference_code = db.Column(db.Integer, 
+                                db.ForeignKey('preferences.preference_code'), 
+                                nullable=False)
+    rank = db.Column(db.Integer,nullable=False)
+
 
 
 class Phrase(db.Model):
