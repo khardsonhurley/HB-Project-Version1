@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1>Parrot</h1>
+
+    <h3>An interactive spanish article translator for Spanish Language 
+        Learners</h3>
+
+    <div>
+        {% if "user_id" not in session %}
+            <a href="/signup"><input type="submit" value="Get Started"></a>
+        {% endif %} 
+    </div>
+
+    <br> 
+
+    <div>
+            <a href="/translate">Try it out!</a>
+    </div>
+
+    <div>
+        <!-- Project Info -->
+    </div>
+
+    <div>
+        <!-- Project Features -->
+    </div>
+
+    <div>
+        <!-- Ratings -->
+    </div>
+
+    <div>
+        <!-- Contact Info -->
+    </div>
+{% endblock %}

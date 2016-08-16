@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1 id='test'>Lets translate!</h1>
+
+    <h4>Highlight a word below you want to translate. Then click the translate button.</h4>
+    <br> 
+    <p class="article">Sólo tú le das brillo y amor a mi corazón.
+    Sólo tú me miras con tanta pureza y belleza interior.
+    Sólo tú llenas de alegría a mi alma.</p>
+
+    <button id="translate">Translate</button>
+
+
+    <script type="text/javascript">
+        function showTranslation(result){
+
+
+            // alert("Your phrase translated: " + result);
+        }
+
+        function GetSelectedText(){
+                var selection = window.getSelection();                                        
+                var stringSelection = selection.toString();
+
+                // request method requires a dictionary/object to read.
+                var translationInput = {
+                    "phrase": stringSelection
+                }
+
+                $.post("/translate", translationInput, function(result){
+                    displayTooltip(result, selection);
+                });
+
+            } 
+        
+        // function displayTooltip(result, selection){
+        //     //create an arbitrary div in the html
+        //     var tooltip = $('<div>');
+        //     //add a class to this div.
+        //     tooltip.addClass('fake');
+        //     //add the translated text to the div. 
+        //     tooltip.text(result);
+        //     //add the div to the body of the html.
+        //     $('body').append(tooltip);
+        //     var position = selection.getRangeAt(0).getBoundingClientRect();
+        //     tooltip.offset({top: position.top -20, left: position.left});
+
+        // }
+
+        $('.article').mouseup(function(){
+            var selection = window.getSelection();
+            var position = selection.getRangeAt(0).getBoundingClientRect();
+            var tooltipContainer = $('<span>');
+            tooltipContainer.css('display', 'inline-block');
+            // tooltipContainer.data({'content': 'translate', 'toggle': 'popover', 'trigger': 'manual'});
+            $('body').append(tooltipContainer);
+            tooltipContainer.offset({top: position.top - 40, left: position.left});
+            tooltipContainer.popover({
+                content: 'test',
+                placement: top
+            });
+            tooltipContainer.popover('show');
+        })
+        
+        $('.container').mouseup
+        // $('#translate').click(GetSelectedText);
+
+    </script>
+
+    <div>
+            <a href="/signup"><input type="submit" value="Sign Up"></a>
+    </div>
+    
+
+
+{% endblock %}

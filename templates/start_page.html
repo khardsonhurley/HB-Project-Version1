@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+    
+    {% if "user_id" not in session %}
+        <h3>Sign up or Log in</h3>
+      
+            <div>
+                <a href="/signup"><input type="submit" value="Sign Up"></a>
+            </div>
+
+            <div>
+                <a href="/login"><input type="submit" value="Log In"></a>
+            </div>
+    {% endif %}
+
+    <h3>Try our translator!</h3>
+
+        <div>
+            <a href="/translate"><input type="submit" value="Translate Trial"></a>
+        </div>
+
+{% endblock %}
