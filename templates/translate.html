@@ -1,18 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h1 id='test'>Lets translate!</h1>
+    <h1 >Lets translate!</h1>
 
     <h4>Highlight a word below you want to translate. Then click the translate button.</h4>
     <br> 
-    <div class="article">
-        <div><h4>La isla de los presidentes y el extraño dialecto de signos</h4></div>
-        Ha sido protagonista inesperada de una película, escena de accidentes y tragedias con apellido Kennedy, lugar de vacaciones, escenario de fiestas de recaudación para campañas políticas, destino de esclavos liberados hace dos siglos y la misteriosa cuna de un lenguaje de signos ancestral en Estados Unidos. Es la isla de Martha’s Vineyard, donde Barack Obama celebra junto a su familia sus últimas vacaciones de verano como presidente.
-        </div>
-        <br>
-        <b>Mansiones de lujo y campos de golf</b><br>
+    <div>
+        <div class='row'>
+            <div class='col-lg-12 col-md-12 col-sm-12 col-sm-12'>
+                <div><h4>La isla de los presidentes y el extraño dialecto de signos</h4>
+                Ha sido protagonista inesperada de una película, escena de accidentes y tragedias con apellido Kennedy, lugar de vacaciones, escenario de fiestas de recaudación para campañas políticas, destino de esclavos liberados hace dos siglos y la misteriosa cuna de un lenguaje de signos ancestral en Estados Unidos. Es la isla de Martha’s Vineyard, donde Barack Obama celebra junto a su familia sus últimas vacaciones de verano como presidente.
+                </div>
+                <br>
+                <div><b>Mansiones de lujo y campos de golf</b><br>
 
-        Obama ha elegido el mismo destino para sus vacaciones desde que es presidente, con una sola excepción, el año 2012, cuando se jugaba la reelección contra Mitt Romney. Este verano, la primera de los Obama en llegar a la isla ha sido Sasha, la hija mejor, que ha trabajado unas semanas en uno de los restaurantes locales. El resto de la familia, incluidos sus dos perros, se unieron este sábado después de celebrar el 55 cumpleaños del presidente y permanecerán allí hasta el día 21. La isla ha sido testigo del partido de golf número 300 que juega el presidente —el recuento lo lleva un periodista de CBS— acompañado de figuras de la NBA como Stephen Curry o Chris Paul.
+                Obama ha elegido el mismo destino para sus vacaciones desde que es presidente, con una sola excepción, el año 2012, cuando se jugaba la reelección contra Mitt Romney. Este verano, la primera de los Obama en llegar a la isla ha sido Sasha, la hija mejor, que ha trabajado unas semanas en uno de los restaurantes locales. El resto de la familia, incluidos sus dos perros, se unieron este sábado después de celebrar el 55 cumpleaños del presidente y permanecerán allí hasta el día 21. La isla ha sido testigo del partido de golf número 300 que juega el presidente —el recuento lo lleva un periodista de CBS— acompañado de figuras de la NBA como Stephen Curry o Chris Paul.
+                </div>
+            </div>
         </div>
         <br>
 
@@ -20,15 +24,12 @@
 
 
     <script type="text/javascript">
-        // function showTranslation(result){
 
+        // $(function () {
+        //     $('[data-toggle="popover"]').popover()
+        // })
 
-        //     // alert("Your phrase translated: " + result);
-        // }
-        $(function () {
-            $('[data-toggle="popover"]').popover()
-        })
-        function GetSelectedText(){
+        function getSelectedText(){
             //on the window, this gets the translated text from the window. 
             var selection = window.getSelection();  
 
@@ -53,62 +54,55 @@
                 });
             } 
         
-        // function displayTooltip(result, selection){
-        //     //create an arbitrary div in the html
-        //     var tooltip = $('<div>');
-        //     //add a class to this div.
-        //     tooltip.addClass('fake');
-        //     //add the translated text to the div. 
-        //     tooltip.text(result);
-        //     //add the div to the body of the html.
-        //     $('body').append(tooltip);
-        //     var position = selection.getRangeAt(0).getBoundingClientRect();
-        //     tooltip.offset({top: position.top -20, left: position.left});
-
-        // }
-
-        // $('.article').mouseup(function(){
-        //     var selection = window.getSelection();
-        //     var position = selection.getRangeAt(0).getBoundingClientRect();
-        //     var tooltipContainer = $('<span>');
-        //     tooltipContainer.css('display', 'inline-block');
-        //     // tooltipContainer.data({'content': 'translate', 'toggle': 'popover', 'trigger': 'manual'});
-        //     $('body').append(tooltipContainer);
-        //     tooltipContainer.offset({top: position.top - 40, left: position.left});
-        //     tooltipContainer.popover({
-        //         content: 'test', <----- HERE PUT RESULT
-        //         placement: top
-        //     });
-        //     tooltipContainer.popover('show');
-        // })
-        
         function createTooltip(result,selection, length){
+
+           
             // get the position of the selection. This instantiates an object
             //of the class ClientRect that has all information about the position
             //of the rectangle placed around the selection. 
             var position = selection.getRangeAt(0).getBoundingClientRect();
+            console.log(position);
             //create placeholder span. 
             var tooltip = $('<span>');
             //sets the tooltip data. 
-            tooltip.data({'content': result, 'toggle':'tooltip', 'trigger':'manual', 'placement': "top"});
-            console.log(tooltip);
+            tooltip.data({'content': result, 'toggle':'popover', 'placement': "top"});
+            // tooltip.data({'content': result, 'placement': "top"});
             //add the span to the html. 
             $('body').append(tooltip);
 
-            //puts the tool tip right above the position of the selection.
-            tooltip.offset({top:position.top + 40, left: position.left + (8*length)/2});
-
-            //shows the popover
+            //puts the tool tip right above the position of the selection. This 
+            //does not work for small screens. Can you do a relative position 
+            //based on screen size?
+            tooltip.offset({top:position.top - 10, left: position.left + (7*length)/2});
+            // tooltip.offset({top:position.top, left: position.left});
+            //initializes the popover over, without is this it will not show. 
             tooltip.popover('show');
+
+           
         }
-        
-        $('.article').mouseup(GetSelectedText)
-        // $('#translate').click(GetSelectedText);
+
+        // function createTooltip(result,selection,length){
+
+
+
+        // }
+        //checks the body of html for an element of the class 'popover' and 
+        //removes it on the event mousedown. 
+        $('body').mousedown(function(){
+            $('.popover').remove();
+            });         
+        //listens for the mouseup event on the element of class 'article.' When
+        //this happens, run the function getSelectedText. 
+        $('.row').mouseup(getSelectedText);
+
+           
+     // $('#translate').click(GetSelectedText);
 
     </script>
 
-    <div>
-            <a href="/signup"><input type="submit" value="Sign Up"></a>
+    <div>   
+            <h4> Like what you see? </h4>
+            <a href="/signup" class="btn btn-success btn-lg"> Sign Up </a>
     </div>
     
 

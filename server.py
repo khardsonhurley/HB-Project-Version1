@@ -68,6 +68,8 @@ def signup_process():
         db.session.add(new_user)
         db.session.commit()
 
+        print language_level
+
         session["user_id"] = new_user.user_id
 
         flash("Username: %s has been added." % username)
