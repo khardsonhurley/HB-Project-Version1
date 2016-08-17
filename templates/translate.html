@@ -5,33 +5,52 @@
 
     <h4>Highlight a word below you want to translate. Then click the translate button.</h4>
     <br> 
-    <p class="article">Sólo tú le das brillo y amor a mi corazón.
-    Sólo tú me miras con tanta pureza y belleza interior.
-    Sólo tú llenas de alegría a mi alma.</p>
+    <div class="article">
+        <div><h4>La isla de los presidentes y el extraño dialecto de signos</h4></div>
+        Ha sido protagonista inesperada de una película, escena de accidentes y tragedias con apellido Kennedy, lugar de vacaciones, escenario de fiestas de recaudación para campañas políticas, destino de esclavos liberados hace dos siglos y la misteriosa cuna de un lenguaje de signos ancestral en Estados Unidos. Es la isla de Martha’s Vineyard, donde Barack Obama celebra junto a su familia sus últimas vacaciones de verano como presidente.
+        </div>
+        <br>
+        <b>Mansiones de lujo y campos de golf</b><br>
 
-    <button id="translate">Translate</button>
+        Obama ha elegido el mismo destino para sus vacaciones desde que es presidente, con una sola excepción, el año 2012, cuando se jugaba la reelección contra Mitt Romney. Este verano, la primera de los Obama en llegar a la isla ha sido Sasha, la hija mejor, que ha trabajado unas semanas en uno de los restaurantes locales. El resto de la familia, incluidos sus dos perros, se unieron este sábado después de celebrar el 55 cumpleaños del presidente y permanecerán allí hasta el día 21. La isla ha sido testigo del partido de golf número 300 que juega el presidente —el recuento lo lleva un periodista de CBS— acompañado de figuras de la NBA como Stephen Curry o Chris Paul.
+        </div>
+        <br>
+
+    </div>
 
 
     <script type="text/javascript">
-        function showTranslation(result){
+        // function showTranslation(result){
 
 
-            // alert("Your phrase translated: " + result);
-        }
-
+        //     // alert("Your phrase translated: " + result);
+        // }
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
         function GetSelectedText(){
-                var selection = window.getSelection();                                        
-                var stringSelection = selection.toString();
+            //on the window, this gets the translated text from the window. 
+            var selection = window.getSelection();  
 
-                // request method requires a dictionary/object to read.
-                var translationInput = {
-                    "phrase": stringSelection
-                }
+            //this changes the selection to a string.               
+            var stringSelection = selection.toString();
 
-                $.post("/translate", translationInput, function(result){
-                    displayTooltip(result, selection);
+            //get length of the selection. 
+            var length = stringSelection.length;
+
+            // Request.form.get requires a dictionary to read it. 
+            var translationInput = {
+                "phrase": stringSelection
+            }
+
+            //send a post request to the translate route, remember the middle 
+            //value is the data you are sending to the route. This must be in 
+            //dictionary format for request.form.get(). The result of that
+            //is passed into the an anonymous function (because we wanted to
+            // pass in two things: translated result and the location of it.)
+            $.post("/translate", translationInput, function(result){
+                createTooltip(result, selection, length);
                 });
-
             } 
         
         // function displayTooltip(result, selection){
@@ -48,22 +67,42 @@
 
         // }
 
-        $('.article').mouseup(function(){
-            var selection = window.getSelection();
-            var position = selection.getRangeAt(0).getBoundingClientRect();
-            var tooltipContainer = $('<span>');
-            tooltipContainer.css('display', 'inline-block');
-            // tooltipContainer.data({'content': 'translate', 'toggle': 'popover', 'trigger': 'manual'});
-            $('body').append(tooltipContainer);
-            tooltipContainer.offset({top: position.top - 40, left: position.left});
-            tooltipContainer.popover({
-                content: 'test',
-                placement: top
-            });
-            tooltipContainer.popover('show');
-        })
+        // $('.article').mouseup(function(){
+        //     var selection = window.getSelection();
+        //     var position = selection.getRangeAt(0).getBoundingClientRect();
+        //     var tooltipContainer = $('<span>');
+        //     tooltipContainer.css('display', 'inline-block');
+        //     // tooltipContainer.data({'content': 'translate', 'toggle': 'popover', 'trigger': 'manual'});
+        //     $('body').append(tooltipContainer);
+        //     tooltipContainer.offset({top: position.top - 40, left: position.left});
+        //     tooltipContainer.popover({
+        //         content: 'test', <----- HERE PUT RESULT
+        //         placement: top
+        //     });
+        //     tooltipContainer.popover('show');
+        // })
         
-        $('.container').mouseup
+        function createTooltip(result,selection, length){
+            // get the position of the selection. This instantiates an object
+            //of the class ClientRect that has all information about the position
+            //of the rectangle placed around the selection. 
+            var position = selection.getRangeAt(0).getBoundingClientRect();
+            //create placeholder span. 
+            var tooltip = $('<span>');
+            //sets the tooltip data. 
+            tooltip.data({'content': result, 'toggle':'tooltip', 'trigger':'manual', 'placement': "top"});
+            console.log(tooltip);
+            //add the span to the html. 
+            $('body').append(tooltip);
+
+            //puts the tool tip right above the position of the selection.
+            tooltip.offset({top:position.top + 40, left: position.left + (8*length)/2});
+
+            //shows the popover
+            tooltip.popover('show');
+        }
+        
+        $('.article').mouseup(GetSelectedText)
         // $('#translate').click(GetSelectedText);
 
     </script>
