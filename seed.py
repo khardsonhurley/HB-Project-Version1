@@ -2,7 +2,7 @@
 
 from sqlalchemy import func
 from model import (Article, Category)
-from server import app
+from server import app, db, connect_to_db
 import newspaper
 
 def load_articles():
@@ -57,7 +57,7 @@ def load_articles():
             article.parse()
 
             #instantiates an instance in the articles table. 
-            db_article = Article(mainsite=mainsite, title=article.title, 
+            db_article = Article(mainsite=url, title=article.title, 
                             authors=article.authors, language='es',
                             url=article.url, category_code=category_name, 
                             top_image=article.top_image, text=article.text)

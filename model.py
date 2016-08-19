@@ -34,7 +34,7 @@ class User(db.Model):
     articles = db.relationship('Article', secondary= 'user_articles', 
                                 backref= 'users')
 
-    preferences = db.relationship('Preference', 
+    categories = db.relationship('Category', 
                                   secondary='user_category_preferences',
                                   backref='users')
 
@@ -50,7 +50,8 @@ class Article(db.Model):
     title = db.Column(db.String(100), nullable=True)
     authors= db.Column(db.String(50), nullable=True)
     language = db.Column(db.String(15), nullable=True)
-    category = db.Column(db.String(20),nullable=False)
+    category_code = db.Column(db.String(30),
+                    db.ForeignKey('categories.category_code'),nullable=False)
     url = db.Column(db.String(100), nullable=True)
     top_image = db.Column(db.String(100),nullable=True)
     text = db.Column(db.Text, nullable=False)
@@ -90,8 +91,8 @@ class UserCategoryPreference(db.Model):
                         autoincrement=True,
                         primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    preference_code = db.Column(db.Integer, 
-                                db.ForeignKey('preferences.preference_code'), 
+    category_code = db.Column(db.String(30), 
+                                db.ForeignKey('categories.category_code'), 
                                 nullable=False)
     rank = db.Column(db.Integer,nullable=False)
 
