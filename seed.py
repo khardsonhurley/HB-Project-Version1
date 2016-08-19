@@ -1,6 +1,5 @@
 """Utility file to seed the articles database from newspaper API"""
 
-import article
 from sqlalchemy import func
 from model import (Article, Category)
 from server import app
@@ -63,11 +62,10 @@ def load_articles():
                             url=article.url, category_code=category_name, 
                             top_image=article.top_image, text=article.text)
 
-            print db_article
             #adds the article content to the database. 
-    #         db.session.add(db_article)
+            db.session.add(db_article)
     
-    # db.session.commit()
+    db.session.commit()
 
 
 # def load_users():
