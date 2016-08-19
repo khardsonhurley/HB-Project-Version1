@@ -12,7 +12,9 @@ from flask import (Flask, render_template, redirect, request, flash, session)
 
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import connect_to_db, db, User, Article, UserArticle, Phrase, Note, UserPreference, Preference
+from model import (connect_to_db, db, User, Article, UserArticle, Phrase, Note, UserPreference, Preference)
+
+from article import (get_article, get_newspaper, get_article_urls)
 
 import requests 
 # This allows you to access the variables store in the environment on your 

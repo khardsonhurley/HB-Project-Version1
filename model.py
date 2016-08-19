@@ -35,7 +35,7 @@ class User(db.Model):
                                 backref= 'users')
 
     preferences = db.relationship('Preference', 
-                                  secondary='user_preferences',
+                                  secondary='user_category_preferences',
                                   backref='users')
 
 class Article(db.Model):
@@ -46,10 +46,13 @@ class Article(db.Model):
     article_id = db.Column(db.Integer, 
                         autoincrement=True,
                         primary_key=True)
+    mainsite = db.Column(db.String(100),nullable=False)
     title = db.Column(db.String(100), nullable=True)
-    author= db.Column(db.String(50), nullable=True)
+    authors= db.Column(db.String(50), nullable=True)
     language = db.Column(db.String(15), nullable=True)
+    category = db.Column(db.String(20),nullable=False)
     url = db.Column(db.String(100), nullable=True)
+    top_image = db.Column(db.String(100),nullable=True)
     text = db.Column(db.Text, nullable=False)
 
 class UserArticle(db.Model):
@@ -66,20 +69,22 @@ class UserArticle(db.Model):
     user_id = db.Column(db.Integer,
                         db.ForeignKey('users.user_id'), nullable=False)
 
-class Preference(db.Model):
-    """Stores all article preferences."""
+class Category(db.Model):
+    """Stores all article categories."""
 
-    __tablename__ = "preferences"
+    __tablename__ = "categories"
 
-    preference_code = db.Column(db.String(30), primary_key=True)
+    category_code = db.Column(db.String(30), primary_key=True)
+    url = db.Column(db.String(50), nullable=False)
+    english_category = db.Column(db.String(50), nullable=True)
     description = db.Column(db.Text, nullable=True)
 
 
-class UserPreference(db.Model):
+class UserCategoryPreference(db.Model):
     """Association table between users and preferences. Shows which preferences
     each user chose.""" 
 
-    __tablename__= "user_preferences"
+    __tablename__= "user_category_preferences"
 
     user_preference_id = db.Column(db.Integer, 
                         autoincrement=True,
