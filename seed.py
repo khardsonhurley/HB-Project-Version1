@@ -17,6 +17,7 @@ def load_articles():
     'http://elpaissemanal.elpais.com', 'http://elviajero.elpais.com', 
     'http://economia.elpais.com', 'http://elcomidista.elpais.com']
 
+
     category_dict = {'politica':'Politics', 
                  'one': 'Media',
                  'deportes': 'Sports',
@@ -38,34 +39,50 @@ def load_articles():
         category_name = url[7:-11]
         
         #Queries for the category in the database. 
-        result = Category.query.filter_by(category_code=category_name)
+        # result = Category.query.filter_by(category_code=category_name)
 
-        #If the category is not already in the database, adds 
-        #to the categories table.
+        # #If the category is not already in the database, adds 
+        # #to the categories table.
+        # """THIS ISNT WORKING!!!!!! HELP!!!!!!"""
+        # # if not result: 
 
-        if not result:    
-            db_category = Category(category_code=category_name, url=url,
-                                english_category=category_dict[category_name])
+        #Adds category to the database in the categories table. 
+        db_category = Category(category_code=category_name, url=url,
+                            english_category=category_dict[category_name])
 
+        #Verifying that the category has been added. 
+        db.session.add(db_category)
+        db.session.commit()
+
+        print "\n\n\n\n\nAdded category %s \n\n\n\n\n" % (category_name)
+        
         #creates a list of article objects. 
         category_articles = category_newspaper.articles
+
+        ########SLIDE THIS LIST ^^^^^ TO GET FIRST 100######
 
         #iterates over the list of article objects. 
         for article in category_articles:
             #downloads and parses through the article. 
             article.download()
+            print 'after download'
             article.parse()
+            print 'after parse'
 
             #instantiates an instance in the articles table. 
             db_article = Article(mainsite=url, title=article.title, 
                             authors=article.authors, language='es',
                             url=article.url, category_code=category_name, 
-                            top_image=article.top_image, text=article.text)
+                            top_image=article.top_image)
 
             #adds the article content to the database. 
             db.session.add(db_article)
+            db.session.commit()
+            #Verifying article is committed. 
+            print "commited %s" % (db_article)
+            
     
-    db.session.commit()
+        
 
 
 # def load_users():

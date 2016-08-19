@@ -46,15 +46,15 @@ class Article(db.Model):
     article_id = db.Column(db.Integer, 
                         autoincrement=True,
                         primary_key=True)
-    mainsite = db.Column(db.String(100),nullable=False)
-    title = db.Column(db.String(100), nullable=True)
-    authors= db.Column(db.String(50), nullable=True)
+    mainsite = db.Column(db.String(500),nullable=False)
+    title = db.Column(db.String(500), nullable=True)
+    authors= db.Column(db.String(500), nullable=True)
     language = db.Column(db.String(15), nullable=True)
     category_code = db.Column(db.String(30),
                     db.ForeignKey('categories.category_code'),nullable=False)
-    url = db.Column(db.String(100), nullable=True)
-    top_image = db.Column(db.String(100),nullable=True)
-    text = db.Column(db.Text, nullable=False)
+    url = db.Column(db.String(500), nullable=True)
+    top_image = db.Column(db.String(500),nullable=True)
+    # text = db.Column(db.Text, nullable=False)
 
 class UserArticle(db.Model):
     """Association table between users and articles. Shows which articles each
@@ -76,7 +76,7 @@ class Category(db.Model):
     __tablename__ = "categories"
 
     category_code = db.Column(db.String(30), primary_key=True)
-    url = db.Column(db.String(50), nullable=False)
+    url = db.Column(db.String(500), nullable=False)
     english_category = db.Column(db.String(50), nullable=True)
     description = db.Column(db.Text, nullable=True)
 
