@@ -10,17 +10,9 @@
         Preference #1: 
         <select name="preference_1">
             <option value="" disabled selected> Select your preference</option>
-            <option value="international"> International </option>
-            <option value="opinion"> Opinion </option>
-            <option value="americas"> Americas </option>
-            <option value="US"> United States </option>
-            <option value="spain"> Spain </option>
-            <option value="science"> Science </option>
-            <option value="tech"> Technology </option>
-            <option value="culture"> Culture </option>
-            <option value="style"> Style </option>
-            <option value="sports"> Sports </option>
-            <option value="sports"> TV </option>
+            {% for category in categories %}
+                <option value= "{{category.category_code}}"> {{category.english_category}}</option>
+            {% endfor %}
         </select>
         </div>
 
@@ -30,17 +22,9 @@
         Preference #2: 
         <select name="preference_2">
             <option value="" disabled selected> Select your preference</option>
-            <option value="international"> International </option>
-            <option value="opinion"> Opinion </option>
-            <option value="americas"> Americas </option>
-            <option value="US"> United States </option>
-            <option value="spain"> Spain </option>
-            <option value="science"> Science </option>
-            <option value="tech"> Technology </option>
-            <option value="culture"> Culture </option>
-            <option value="style"> Style </option>
-            <option value="sports"> Sports </option>
-            <option value="sports"> TV </option>
+            {% for category in categories %}
+                <option value= "{{category.category_code}}"> {{category.english_category}}</option>
+            {% endfor %}
         </select>
         </div>
 
@@ -50,17 +34,10 @@
         Preference #3: 
         <select name="preference_3">
             <option value="" disabled selected> Select your preference</option>
-            <option value="international"> International </option>
-            <option value="opinion"> Opinion </option>
-            <option value="americas"> Americas </option>
-            <option value="US"> United States </option>
-            <option value="spain"> Spain </option>
-            <option value="science"> Science </option>
-            <option value="tech"> Technology </option>
-            <option value="culture"> Culture </option>
-            <option value="style"> Style </option>
-            <option value="sports"> Sports </option>
-            <option value="sports"> TV </option>
+            {% for category in categories %}
+                <option value= "{{category.category_code}}"> {{category.english_category}}</option>
+            {% endfor %}
+
         </select>
         </div>
 

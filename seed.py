@@ -1,24 +1,12 @@
 """Utility file to seed the articles database from newspaper API"""
 
 from sqlalchemy import func
-from model import (Article, Category)
+from model import (Article, Category, User)
 from server import app, db, connect_to_db
 import newspaper
-
-def load_articles():
-    """Load articles into articles table. Adds categories to categories table."""
-    
-    category_urls = ['http://politica.elpais.com', 'http://one.elpais.com',
-    'http://deportes.elpais.com','http://escuela.elpais.com', 
-    'http://cultura.elpais.com', 'http://motor.elpais.com', 
-    'http://programacion-tv.elpais.com', 
-    'http://smoda.elpais.com', 'http://resultados.elpais.com', 
-    'http://internacional.elpais.com', 'http://tecnologia.elpais.com', 
-    'http://elpaissemanal.elpais.com', 'http://elviajero.elpais.com', 
-    'http://economia.elpais.com', 'http://elcomidista.elpais.com']
-
-
-    category_dict = {'politica':'Politics', 
+        
+# Global variables. 
+category_dict = {'politica':'Politics', 
                  'one': 'Media',
                  'deportes': 'Sports',
                  'escuela': 'Education',
@@ -26,11 +14,37 @@ def load_articles():
                  'smoda': 'Fashion',
                  'resultados': 'Olympics',
                  'internacional': 'International',
-                 'technologia':'Technology',
+                 'tecnologia':'Technology',
                  'elpaissemanal':'Weekly News',
                  'elviajero': 'Travel',
+                 'economia': 'Economics',
                  'elcomidista':'Food'
                  }
+
+category_urls = ['http://politica.elpais.com', 'http://one.elpais.com',
+    'http://deportes.elpais.com','http://escuela.elpais.com', 
+    'http://cultura.elpais.com', 'http://smoda.elpais.com', 'http://resultados.elpais.com', 
+    'http://internacional.elpais.com', 'http://tecnologia.elpais.com', 
+    'http://elpaissemanal.elpais.com', 'http://elviajero.elpais.com', 
+    'http://economia.elpais.com', 'http://elcomidista.elpais.com']
+
+def add_categories():
+    """Loads categories into the database."""
+    for category in category_dict:
+        url = 'http://%s.elpais.com' % category
+        db_category = Category(category_code=category, url=url,
+                            english_category=category_dict[category])
+        #Verifying that the category has been added. 
+        db.session.add(db_category)
+        db.session.commit()
+
+    print "\n\n\n\n\n DONE WITH ADDING CATEGORIES \n\n\n\n\n"
+
+def load_articles():
+    """Load articles into articles table. Adds categories to categories table."""
+    
+
+
 
     for url in category_urls:
         #creates a newspaper object. 
@@ -39,27 +53,24 @@ def load_articles():
         category_name = url[7:-11]
         
         #Queries for the category in the database. 
-        # result = Category.query.filter_by(category_code=category_name)
+        result = Category.query.filter_by(category_code=category_name)
 
         # #If the category is not already in the database, adds 
         # #to the categories table.
-        # """THIS ISNT WORKING!!!!!! HELP!!!!!!"""
-        # # if not result: 
-
-        #Adds category to the database in the categories table. 
-        db_category = Category(category_code=category_name, url=url,
+        if not result: 
+            #Adds category to the database in the categories table. 
+            db_category = Category(category_code=category_name, url=url,
                             english_category=category_dict[category_name])
 
-        #Verifying that the category has been added. 
-        db.session.add(db_category)
-        db.session.commit()
+            #Verifying that the category has been added. 
+            db.session.add(db_category)
+            db.session.commit()
 
-        print "\n\n\n\n\nAdded category %s \n\n\n\n\n" % (category_name)
+        print "\n\n\n\n\nArticle Category: %s \n\n\n\n\n" % (category_name)
         
         #creates a list of article objects. 
-        category_articles = category_newspaper.articles
+        category_articles = category_newspaper.articles[:21]
 
-        ########SLIDE THIS LIST ^^^^^ TO GET FIRST 100######
 
         #iterates over the list of article objects. 
         for article in category_articles:
@@ -85,12 +96,21 @@ def load_articles():
         
 
 
-# def load_users():
-#     """Load users from u.user into database"""
+def load_users():
+    """Load users from u.user into database"""
 
-#     for i, row in enumerate(open("seed_data/u.user")):
-#         row = row.rstrip()
-#         user_id, age, gender, occupation, zipcode = row.split("|")
+    for i, row in enumerate(open("seed_data/u.user")):
+        row = row.rstrip()
+        user_id,email,username,password,first_name,last_name,phone,language,language_level = row.split("|")
+        user = User(user_id=user_id, username=username, password=password,
+                    first_name=first_name, last_name=last_name, phone=phone,
+                    language=language, language_level=language_level)
+        db.session.add(user)
+
+    db.session.commit()
+
+    print "\n\n\n\n\n DONE WITH ADDING USERS \n\n\n\n\n"
+
 
 
 ###################### HELPER FUNCTIONS ########################
@@ -98,6 +118,7 @@ def load_articles():
 
 if __name__ == "__main__":
     connect_to_db(app)
-    db.create_all()
-    load_articles()
-   
+    # db.create_all()
+    # add_categories()
+    # load_articles()
+    load_users()   

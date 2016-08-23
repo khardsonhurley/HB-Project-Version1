@@ -21,6 +21,10 @@ import os
 
 import json 
 
+import newspaper
+
+from random import sample
+
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
@@ -29,10 +33,10 @@ app.secret_key = "ABC"
 #Google translate key for API
 key = os.environ['GOOGLE_TRANSLATE_KEY']
 
-# Normally, if you use an undefined variable in Jinja2, it fails silently.
-# This is horrible. Fix this so that, instead, it raises an error.
+# Keeps jinja from failing silently because of undefined variables.
 app.jinja_env.undefined = StrictUndefined
 
+########################### ROUTES TO DISPLAY PAGES ###########################
 
 @app.route('/')
 def index():
@@ -85,8 +89,8 @@ def set_preferences(user_id):
     
     if request.method == "GET":
         user = User.query.get(user_id)
-        preferences = ['']
-        return render_template("preferences.html", user=user)
+        categories = Category.query.all()
+        return render_template("preferences.html", user=user, categories=categories)
 
     if request.method == "POST":
 
@@ -101,12 +105,13 @@ def set_preferences(user_id):
         preference3 = request.form['preference_3']
 
         #Creating UserPreference objects with the new preferences. 
-        userpreference1 = UserPreference(user_id=user_id, 
-                                        preference_code=preference1, rank=1)
-        userpreference2 = UserPreference(user_id=user_id, 
-                                        preference_code=preference2, rank=2)
-        userpreference3 = UserPreference(user_id=user_id,
-                                        preference_code=preference3, rank=3)
+        userpreference1 = UserCategoryPreference(user_id=user_id, 
+                                        category_code=preference1, rank=1)
+        userpreference2 = UserCategoryPreference(user_id=user_id, 
+                                        category_code=preference2, rank=2)
+        userpreference3 = UserCategoryPreference(user_id=user_id, 
+                                        category_code=preference3, rank=3)
+  
         
         #Can I add them all at once? 
         db.session.add(userpreference1)
@@ -153,13 +158,27 @@ def profile(user_id):
     read articles, recommended articles."""
     
     user = User.query.get(user_id)
-    print user.preferences 
-    return render_template("profile.html", user=user)
+    #Get the users three category preferences.
+    #Find three articles from each of these categories. 
+    preferences = UserCategoryPreference.query.filter(UserCategoryPreference.user_id==user.user_id).all()
+    preferences_dict = {}
+    for preference in preferences:
+        articles = Article.query.filter(Article.category_code==preference.category_code).all()
+        preferences_dict[preference]=sample(articles,2)
 
-# @app.route('/article/<int:article_id>')
-# def article(): 
-#     """Page where article will be rendered and user can start translating."""
-#     pass
+    print preferences_dict  
+    return render_template("profile.html", user=user, preferences_dict=preferences_dict)
+
+@app.route('/article/<int:article_id>')
+def article(article_id): 
+    """Page where article will be rendered and user can start translating."""
+    articleobj = Article.query.filter(Article.article_id==article_id).first()
+
+    articleobj2 = newspaper.Article(articleobj.url)
+    articleobj2.download()
+    articleobj2.parse()
+
+    return render_template("article.html", article=articleobj2)
 
 
 @app.route('/translate', methods = ["GET", "POST"])
@@ -179,7 +198,6 @@ def translating():
 
     if request.method == "POST":
         #Getting the value in the dictionary sent by JS. 
-        print(request.form)
         phrase = request.form.get("phrase")
 
         #Splitting the words into a list. 

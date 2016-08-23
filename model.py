@@ -4,6 +4,11 @@
 #allows me to use the session object
 from flask_sqlalchemy import SQLAlchemy 
 
+
+# This is the connection to the SQLite database; we're getting this through
+# the Flask-SQLAlchemy helper library. The session in db.session is an objects
+# that allows us to design and get information from the database. 
+
 db = SQLAlchemy()
 
 ################################################################################
@@ -76,7 +81,7 @@ class Category(db.Model):
     __tablename__ = "categories"
 
     category_code = db.Column(db.String(30), primary_key=True)
-    url = db.Column(db.String(500), nullable=False)
+    url = db.Column(db.String(500), nullable=True)
     english_category = db.Column(db.String(50), nullable=True)
     description = db.Column(db.Text, nullable=True)
 
@@ -95,6 +100,9 @@ class UserCategoryPreference(db.Model):
                                 db.ForeignKey('categories.category_code'), 
                                 nullable=False)
     rank = db.Column(db.Integer,nullable=False)
+
+    ##### Relationships #####
+    category = db.relationship('Category', backref='usercategorypreference')
 
 
 
