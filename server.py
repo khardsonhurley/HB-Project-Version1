@@ -25,6 +25,8 @@ import newspaper
 
 from random import sample
 
+import urllib
+
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
@@ -209,7 +211,13 @@ def translating():
     if request.method == "POST":
         #Getting the value in the dictionary sent by JS. 
         phrase = request.form.get("phrase")
-        print phrase
+
+        #replace any reserved characters with the escape functions for it so 
+        #these do not break in the request to google api. Ex: 45.2% was not 
+        #readible in the api because google turns it into 45.2%%20, % is a 
+        #special character. The url.quote function below turns that into 45.2%25
+        #because %25 is the escape character for %. To google it because 45.2%25%20.
+        phrase = urllib.quote(phrase)
 
         #Splitting the words into a list. 
         word_list = phrase.split(' ')
@@ -219,8 +227,6 @@ def translating():
 
         #Google requires words separated by %20. 
         text = "%20".join(word_list)
-        print type(text)
-        print text
 
         #The results I get back here is going to be JSON
         results = requests.get(google_url + text)
