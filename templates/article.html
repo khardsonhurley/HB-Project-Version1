@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block page_specific_script_tag %}
+    <script src="/static/js/translateFunction.js"></script>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+            <div class="row">
+                <h1>{{ article.title }}<h1>
+                <h4>Por: 
+                    {% for author in article.authors %}
+                        {{author}},
+                    {% endfor %}
+                </h4>
+                <a href="{{article.url}}">click here for article</a>
+            </div>
+            <div class="row">
+                <p>{{article.text}}</p>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            Here is the notes section
+        </div>
+    </div>
+</div>
+
+{% endblock %}

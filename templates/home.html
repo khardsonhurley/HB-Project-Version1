@@ -1,21 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h1>Parrot</h1>
+    <div class="jumbotron">
+        <div class="container">
+        <h1>Parrot</h1>
 
-    <h3>An interactive spanish article translator for Spanish Language 
-        Learners</h3>
-
-    <div>
-        {% if "user_id" not in session %}
-            <a class="btn btn-success btn-lg" href="/signup">Get started</a>
-        {% endif %} 
+        <h3>An interactive spanish article translator for Spanish Language Learners</h3>
+            {% if "user_id" not in session %}
+                <a class="btn btn-success btn-lg" href="/signup">Get started</a>
+            {% endif %} 
+        <a href="/translate"><h4>Try it out!</h4></a>
+        </div>
     </div>
+
 
     <br> 
 
     <div>
-            <a href="/translate"><h4>Try it out!</h4></a>
+            
     </div>
 
     <div>

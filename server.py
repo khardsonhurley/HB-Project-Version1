@@ -164,7 +164,7 @@ def profile(user_id):
     preferences_dict = {}
     for preference in preferences:
         articles = Article.query.filter(Article.category_code==preference.category_code).all()
-        preferences_dict[preference]=sample(articles,2)
+        preferences_dict[preference]=sample(articles,3)
 
     print preferences_dict  
     return render_template("profile.html", user=user, preferences_dict=preferences_dict)
@@ -179,6 +179,16 @@ def article(article_id):
     articleobj2.parse()
 
     return render_template("article.html", article=articleobj2)
+
+@app.route('/category/<category_code>')
+def category(category_code):
+    """Page where many articles from one category are displayed.""" 
+    #get all of the articles from that category code. and send them with the html.
+
+    articles = Article.query.filter(Article.category_code==category_code).all()
+
+    return render_template("categorypage.html", articles=articles)
+
 
 
 @app.route('/translate', methods = ["GET", "POST"])
@@ -199,6 +209,7 @@ def translating():
     if request.method == "POST":
         #Getting the value in the dictionary sent by JS. 
         phrase = request.form.get("phrase")
+        print phrase
 
         #Splitting the words into a list. 
         word_list = phrase.split(' ')
@@ -208,6 +219,8 @@ def translating():
 
         #Google requires words separated by %20. 
         text = "%20".join(word_list)
+        print type(text)
+        print text
 
         #The results I get back here is going to be JSON
         results = requests.get(google_url + text)
