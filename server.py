@@ -212,6 +212,14 @@ def translating():
         #Getting the value in the dictionary sent by JS. 
         phrase = request.form.get("phrase")
 
+        #######ADD PHRASE TO DATABASE!!!!########
+
+        #Change phrase to unicode.
+        phrase=unicode(phrase)
+
+        #encodes the phrase into utf-8 format.
+        phrase=phrase.encode('utf-8')
+
         #replace any reserved characters with the escape functions for it so 
         #these do not break in the request to google api. Ex: 45.2% was not 
         #readible in the api because google turns it into 45.2%%20, % is a 

@@ -5,24 +5,37 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-            <div class="row">
-                <h1>{{ article.title }}<h1>
-                <h4>Por: 
-                    {% for author in article.authors %}
-                        {{author}},
-                    {% endfor %}
-                </h4>
-                <a href="{{article.url}}">click here for article</a>
-            </div>
-            <div class="row">
-                <p>{{article.text}}</p>
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <div class="row" id="article-body">
+                <div class="row">
+                    <h1>{{ article.title }}<h1>
+                    <h4>Por: 
+                        {% for author in article.authors %}
+                            {{author}},
+                        {% endfor %}
+                    </h4>
+                    <a href="{{article.url}}">click here for article</a>
+                </div>
+                <div class="row">
+                    <p>{{article.text}}</p>
+                </div>
             </div>
         </div>
+        <div class="col-lg-1"></div>
 
-        <div class="col-lg-3">
-            Here is the notes section
-        </div>
+        <div class="col-lg-3 form-group">
+                <label for="notes">Notes:</label>
+                <br>
+                <textarea class="pull-lg-right" cols= "40" rows="20" id="notes"></textarea>
+                <br>
+                <a href="#"><button type="button" class="btn btn-success center-block">Save Notes</button></a>
+                <br>
+                <div class="panel panel-success">
+                    <div class="panel-heading">Vocab List</div>
+                    <div class="panel-body"></div>
+                </div>
+        </div>  
+
     </div>
 </div>
 
