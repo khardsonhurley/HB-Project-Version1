@@ -79,10 +79,14 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
         }
         
         function showTranslation(){
+            console.log('im in showTranslation');
+            var selection = getText();
+            debugger;
             //seems like i shouldnt have to do this again. How can I pass it in from the previous function? 
-            var translation = translateText(); 
+            var translation = translateText(selection); 
             //change the content attribute of the popover to now include translation.
-            $('.popover').attr('content', translation);
+            $('.popover').data({'content': translation});
+
             
         }
         
