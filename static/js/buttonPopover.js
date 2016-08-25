@@ -1,12 +1,10 @@
-
-
 "use strict";
 
 $(document).ready(function() {
 
 //global variable 
-var template = '<div class="btn btn-default" id="translate-button">Translate</div>' +
-               '<div class="btn btn-default" id="comment-button">Comment</div>';
+var template = '<button class="btn btn-success" id="translate-button">Translate</button>  ' +
+               '  <div class="btn btn-default" id="comment-button">Comment</div>';
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////    FUNCTIONS    ///////////////////////////////
@@ -46,6 +44,7 @@ var template = '<div class="btn btn-default" id="translate-button">Translate</di
             //of the rectangle placed around the selection. 
             var position = selection.getRangeAt(0).getBoundingClientRect();
             var thePopover = $('<span>');
+            var length = selection.toString().length
 
             //sets the tooltip data. 
             thePopover.data({'content': content , 'toggle':'popover', 'placement': 'top', 'html': true});
@@ -87,9 +86,9 @@ var template = '<div class="btn btn-default" id="translate-button">Translate</di
             
         }
         
-        function makeComment(){
-          //this function would create an html element in the comment sidebar.
-        }
+        // function makeComment(){
+        //   //this function would create an html element in the comment sidebar.
+        // }
         
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,20 +96,29 @@ var template = '<div class="btn btn-default" id="translate-button">Translate</di
 ///////////////////////////////////////////////////////////////////////////////
 
         $('#article-body').mouseup(function(event){
-              firstPopover();
-              event.stopPropagation();
+            firstPopover();
+            console.log('Mouseup')
+            event.stopPropagation(); 
         });
 
-        $('#translate-button').click(function(event){
+        $(document).on('click', '#translate-button', function(){
+            console.log('clicked me');
             showTranslation();
-            event.stopPropagation();
         });
-        
+
+        $(document).on('click', '#comment-button', function(){
+            alert('no comment allowed!');
+        });
+
+     
+
         //need an event listener that will clear the popover after user is done with translation.
-        $('#article-body').....
+        // $('#article-body').....
         
         
-        $('#comment-button').click(function(event){
-            //need to call a function that opens a comment in the comment side-bar.
-        });
+        // $('#comment-button').click(function(event){
+        //     //need to call a function that opens a comment in the comment side-bar.
+        // });
+});
+
  
