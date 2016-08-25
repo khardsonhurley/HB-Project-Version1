@@ -36,6 +36,8 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
             $.post("/translate", translationInput, function(result){
                 return result; 
             });
+            ///QUESTION ABOVE: Is this the async you meant? I think this is why 
+            //the translation isnt working. 
         }
 
         function createPopover(content, selection){
@@ -81,6 +83,10 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
         function showTranslation(){
             console.log('im in showTranslation');
             var selection = getText();
+            //I dont know how to avoid doing the selection and translation again
+            //here. Seems like I should be able to pass these valus in since they
+            //are used in the first event listener on #article-body. Am I missing
+            //something?
             debugger;
             //seems like i shouldnt have to do this again. How can I pass it in from the previous function? 
             var translation = translateText(selection); 
@@ -106,6 +112,7 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
         });
 
         $(document).on('click', '#translate-button', function(){
+            //this is working, showTranslation is not
             console.log('clicked me');
             showTranslation();
         });
