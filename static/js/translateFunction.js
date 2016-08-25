@@ -65,15 +65,23 @@ $(document).ready(function() {
 
         }
 
-        // function addToVocabList(){
+        function replacePopoverContentWithTranslation(){
+            //need even handler on the #translation-button element. 
+            //clear 'content' in popover and replace with the translate on 
+        }
 
-        // }
+        function addToVocabList(text, translatedText){
+            // add the text and the translated text to the DB and to the html
+            //panel vocab list area. 
+        }
+
         function main(){
             var text= getText();
             var translation = translateText(text);
-            //add text and translation to DB and to Vocab List. 
-
+            addToVocabList(text,translation);
             
+
+
 
 
         }
