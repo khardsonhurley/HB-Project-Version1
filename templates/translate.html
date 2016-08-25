@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block page_specific_script_tag %}
-    <script src="/static/js/translateFunction.js"></script>
+    <script src="/static/js/translatePopoverOnly.js"></script>
 {% endblock %}
 {% block content %}
 
@@ -9,7 +9,7 @@
     <h4>Highlight a word below you want to translate. Then click the translate button.</h4>
     <br> 
     <div>
-        <div class='row'>
+        <div class='row' id='article-body'>
             <div class='col-lg-12 col-md-12 col-sm-12 col-sm-12'>
                 <div><h4>La isla de los presidentes y el extraño dialecto de signos</h4>
                 Ha sido protagonista inesperada de una película, escena de accidentes y tragedias con apellido Kennedy, lugar de vacaciones, escenario de fiestas de recaudación para campañas políticas, destino de esclavos liberados hace dos siglos y la misteriosa cuna de un lenguaje de signos ancestral en Estados Unidos. Es la isla de Martha’s Vineyard, donde Barack Obama celebra junto a su familia sus últimas vacaciones de verano como presidente.
