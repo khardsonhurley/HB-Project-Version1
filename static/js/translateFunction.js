@@ -6,7 +6,7 @@ $(document).ready(function() {
 /////////////////////////////    NEW FUNCTIONS    /////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-        function getSelection(){
+        function getText(){
             //on the window, this gets the translated text from the window. 
             var selection = window.getSelection();  
 
@@ -65,16 +65,33 @@ $(document).ready(function() {
 
         }
 
-        function addToVocabList(){
+        // function addToVocabList(){
+
+        // }
+        function main(){
+            var text= getText();
+            var translation = translateText(text);
+            //add text and translation to DB and to Vocab List. 
+
+            
+
 
         }
+
+///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////    EVT LISTENERS    /////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
         //removes any popovers that exist in the html. 
         $('body').mousedown(function(){
             $('.popover').remove();
         });    
 
-        $('body').mouseup(readyTooltip);
-        
+        $('#article-body').mouseup(function(event){
+                main();
+                event.stopPropagation();
+        });
+
         $('#translate-button').click(getSelectedText);
  
 ///////////////////////////////////////////////////////////////////////////////
@@ -144,7 +161,7 @@ $(document).ready(function() {
         }
 
 ///////////////////////////////////////////////////////////////////////////////
-/////////////////////////////    EVT LISTENERS    /////////////////////////////
+///////////////////////////    OLD EVT LISTENERS    ///////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
         //checks the body of html for an element of the class 'popover' and 
