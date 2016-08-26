@@ -35,9 +35,8 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
             // pass in two things: translated result and the location of it.)
             $.post("/translate", translationInput, function(result){
                 return result; 
+                console.log(result);
             });
-            ///QUESTION ABOVE: Is this the async you meant? I think this is why 
-            //the translation isnt working. 
         }
 
         function createPopover(content, selection){
@@ -80,20 +79,13 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
             createPopover(template, selection);
         }
         
-        function showTranslation(){
-            console.log('im in showTranslation');
-            var selection = getText();
-            //I dont know how to avoid doing the selection and translation again
-            //here. Seems like I should be able to pass these valus in since they
-            //are used in the first event listener on #article-body. Am I missing
-            //something?
-            debugger;
-            //seems like i shouldnt have to do this again. How can I pass it in from the previous function? 
-            var translation = translateText(selection); 
-            //change the content attribute of the popover to now include translation.
-            $('.popover').data({'content': translation});
+        function showTranslation(translation){
+            //had to make this in html because the tooltip's html value was set
+            //to true so it now only takes html. Is there a better way to do this? 
+            var htmlTranslation = '<p>'+translation+'</p>';
+            //Changes the html to display the translation. 
+            $('.popover-content').html(htmlTranslation);
 
-            
         }
         
         // function makeComment(){
@@ -112,13 +104,21 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
         });
 
         $(document).on('click', '#translate-button', function(){
-            //this is working, showTranslation is not
-            console.log('clicked me');
-            showTranslation();
+            //this is working
+            var textSelection = getText();
+            //this works
+            var text= textSelection['text']
+            console.log(text);
+            //this doesnt work
+            var translatedText = translateText(text);
+            console.log(translatedText);
+
+            showTranslation(translatedText);
         });
 
         $(document).on('click', '#comment-button', function(){
-            alert('no comment allowed!');
+            $('.popover').remove();
+            //call some other function here that shows form for comment. 
         });
 
      

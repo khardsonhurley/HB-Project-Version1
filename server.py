@@ -212,6 +212,8 @@ def translating():
         #Getting the value in the dictionary sent by JS. 
         phrase = request.form.get("phrase")
 
+        print "\n\n\n\n\n %s \n\n\n\n\n" % phrase
+
         #######ADD PHRASE TO DATABASE!!!!########
 
         #Change phrase to unicode.
