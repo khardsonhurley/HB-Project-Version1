@@ -34,8 +34,8 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
             //is passed into the an anonymous function (because we wanted to
             // pass in two things: translated result and the location of it.)
             $.post("/translate", translationInput, function(result){
-                return result; 
-                console.log(result);
+                showTranslation(result);
+                addToVocabList(translationInput["phrase"], result);
             });
         }
 
@@ -63,9 +63,7 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
 
         function addToVocabList(text, translatedText){
             // add text and translatedText to the html panel vocab list area. 
-            $('.panel-body').append(text + ':' + translatedText);
-            //still need to add these things to the database. Do here or do in server 
-            //file? 
+            $('.panel-body').append(text + ': ' + translatedText+".");
         }
 
         function firstPopover(){
@@ -73,17 +71,20 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
             var textSelection= getText();
             // gets the selection from the object. 
             var selection = textSelection['selection'];
-            // gets the text from the object. 
             var text = textSelection['text'];
-            //create the popover that has the buttons(template - global var) in it. 
-            createPopover(template, selection);
+            //Only want to create a popover if there is text in the selection.
+            if (text){
+                //create the popover that has the buttons(template - global var) in it. 
+                createPopover(template, selection);
+            }
         }
         
         function showTranslation(translation){
             //had to make this in html because the tooltip's html value was set
             //to true so it now only takes html. Is there a better way to do this? 
             var htmlTranslation = '<p>'+translation+'</p>';
-            //Changes the html to display the translation. 
+            //Changes the html to display the translation. Also moves the popover
+            //over slightly. Why is this? 
             $('.popover-content').html(htmlTranslation);
 
         }
@@ -104,16 +105,14 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
         });
 
         $(document).on('click', '#translate-button', function(){
-            //this is working
             var textSelection = getText();
-            //this works
-            var text= textSelection['text']
-            console.log(text);
-            //this doesnt work
+            var text= textSelection['text'];
+            // This function calls the showTranslation function. 
             var translatedText = translateText(text);
-            console.log(translatedText);
-
-            showTranslation(translatedText);
+            // $('#article-body').click(function(event){
+            //     $('.popover').remove();    
+            //     event.stopPropagation();
+            // })
         });
 
         $(document).on('click', '#comment-button', function(){
@@ -122,10 +121,6 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
         });
 
      
-
-        //need an event listener that will clear the popover after user is done with translation.
-        // $('#article-body').....
-        
         
         // $('#comment-button').click(function(event){
         //     //need to call a function that opens a comment in the comment side-bar.

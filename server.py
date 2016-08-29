@@ -174,13 +174,27 @@ def profile(user_id):
 @app.route('/article/<int:article_id>')
 def article(article_id): 
     """Page where article will be rendered and user can start translating."""
+    #Need this to get the article object from the DB. Note this object does not
+    #contain the text of the object, just selected metadata that is stored in the DB. 
     articleobj = Article.query.filter(Article.article_id==article_id).first()
 
-    articleobj2 = newspaper.Article(articleobj.url)
-    articleobj2.download()
-    articleobj2.parse()
+    #Instantiate an instance of the class Article [from newspaper library], the
+    #__init__ for this class requires a url retrieved from the articleobj above.
+    #This allows us to instantiate another object that has all of the metadata 
+    #including the text of the article.  
+    articleobj = newspaper.Article(articleobj.url)
+    #Download the article.
+    articleobj.download()
+    #Parse through the article. 
+    articleobj.parse()
 
-    return render_template("article.html", article=articleobj2)
+    #Remove an article_id that is in the session and replace it with new 
+    #article_id, note that if you return to the same article, its okay becuase
+    #article_id will keep it honest since it never changes. 
+    del session['article_id'] 
+    session["article_id"] = article_id
+
+    return render_template("article.html", article=articleobj)
 
 @app.route('/category/<category_code>')
 def category(category_code):
@@ -212,10 +226,6 @@ def translating():
         #Getting the value in the dictionary sent by JS. 
         phrase = request.form.get("phrase")
 
-        print "\n\n\n\n\n %s \n\n\n\n\n" % phrase
-
-        #######ADD PHRASE TO DATABASE!!!!########
-
         #Change phrase to unicode.
         phrase=unicode(phrase)
 
@@ -245,10 +255,10 @@ def translating():
         dictresults= json.loads(results.text)
 
         #Gets the translated text out of the dictionary in list in dictionary.
-        rawtranslation= dictresults['data']['translations'][0]['translatedText']
+        translation= dictresults['data']['translations'][0]['translatedText']
 
-        #The rawtranslation uses &#39; instead of apostrophes. Replaced them.
-        translation= rawtranslation.replace("&#39;","'")
+        #Adds phrase and its translation to the DB. 
+        add_phrase_to_db(" ".join(word_list),translation)
 
         return translation
 
@@ -262,7 +272,16 @@ def logout_user():
 
     return redirect("/")
 
+############################### HELPER FUNCTIONS ###############################
 
+def add_phrase_to_db(phrase,translation):
+    """Takes in phrase and its translation and adds it to the DB"""
+    user_id = session.get('user_id')
+    article_id = session.get('article_id')
+    # need to get the article_id. Do I put this in the session? 
+    phrase_pair= Phrase(user_id=user_id, article_id=article_id, phrase=phrase, translation=translation)
+    db.session.add(phrase_pair)
+    db.session.commit()
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
