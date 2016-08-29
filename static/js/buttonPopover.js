@@ -89,9 +89,14 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
 
         }
         
-        // function makeComment(){
-        //   //this function would create an html element in the comment sidebar.
-        // }
+        function createComment(){
+            //creates a placeholder div. 
+            var comment = $('<div>');
+            comment.data({'content':'<p>this is a test</p>', toggle:'popover', html:true}); 
+            $('#comment-sidebar').html('this is a test');
+            console.log('in create comment');
+
+        }
         
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,6 +122,7 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
 
         $(document).on('click', '#comment-button', function(){
             $('.popover').remove();
+            createComment(); 
             //call some other function here that shows form for comment. 
         });
 

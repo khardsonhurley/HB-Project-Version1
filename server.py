@@ -226,11 +226,12 @@ def translating():
         #Getting the value in the dictionary sent by JS. 
         phrase = request.form.get("phrase")
 
-        #Change phrase to unicode.
-        phrase=unicode(phrase)
+        #Change phrase to unicode. Has new variable because need to access later
+        #to add to the database. 
+        uni_phrase=unicode(phrase)
 
         #encodes the phrase into utf-8 format.
-        phrase=phrase.encode('utf-8')
+        phrase=uni_phrase.encode('utf-8')
 
         #replace any reserved characters with the escape functions for it so 
         #these do not break in the request to google api. Ex: 45.2% was not 
@@ -257,12 +258,15 @@ def translating():
         #Gets the translated text out of the dictionary in list in dictionary.
         translation= dictresults['data']['translations'][0]['translatedText']
 
-        #Adds phrase and its translation to the DB. 
-        add_phrase_to_db(" ".join(word_list),translation)
+        #Adds phrase and its translation to the DB using helper function. 
+        add_phrase_to_db(uni_phrase,translation)
 
         return translation
 
-
+@app.route('/comments')
+def test_comments():
+    return render_template('comment_test.html')
+    
 @app.route('/logout')
 def logout_user():
     """Log out the user and delete user from session"""
@@ -276,10 +280,14 @@ def logout_user():
 
 def add_phrase_to_db(phrase,translation):
     """Takes in phrase and its translation and adds it to the DB"""
+    #Both user_id and article_id are stored in the flask session.
     user_id = session.get('user_id')
     article_id = session.get('article_id')
-    # need to get the article_id. Do I put this in the session? 
+    
+    #Instantiated an instance of the class Phrase. 
     phrase_pair= Phrase(user_id=user_id, article_id=article_id, phrase=phrase, translation=translation)
+    
+    #Add phrase_pair instance to the database and commits it. .
     db.session.add(phrase_pair)
     db.session.commit()
 
