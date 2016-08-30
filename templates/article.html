@@ -25,7 +25,7 @@
         <div class="col-lg-3 form-group">
                 <label for="comments">Comment Sidebar:</label>
                 <br>
-                <div class="comment-sidebar" cols= "30" rows="20">
+                <div class="comment-sidebar" cols= "30" rows="20" style="visibility:hidden">
                     <div class="detailBox" id="comment-window">
                         <div class="titleBox">
                             <button class="btn btn-default" id="translate-button">
@@ -34,28 +34,26 @@
                                 aria-hidden='true'</span>
                             </button> 
                             <label>Comentarios</label>
-<!--                             <button type="button" class="close" aria-hidden="true">&times;</button>
- -->                        </div>
+                            <button type="button" class="close">&times;</button>
+                        </div>
                         <div class='collapse' id='commentary'>
                             <div class="commentBox">
-                                <p class="taskDescription">This should display 
-                                the text that the comment is referencing.</p>
+                                <b>Escribe un comentario sobre:</b> <p class="commentReference"></p>
                             </div>
                             <div class="actionBox">
                                 <ul class="commentList">
                                     <li>
                                         <div class="commenterImage">
-                                          <img src="http://placekitten.com/50/50" />
+                                          <!-- <img src=""/> -->
                                         </div>
                                         <div class="commentText">
-                                            <p class="">Hello this is a test 
-                                                comment made by another user.</p>
+                                            <p class="commentbody"></p>
                                                  <span class="date sub-text">
-                                                on March 5th, 2014</span>
+                                                 </span>
 
                                         </div>
                                     </li>
-                                    <li>
+                               <!--      <li>
                                         <div class="commenterImage">
                                           <img src="http://placekitten.com/45/45" />
                                         </div>
@@ -63,7 +61,7 @@
                                             <p class="">Hello this is a test comment and this comment is also from another user. It is particularly very long and it goes on and on and on.</p> <span class="date sub-text">on March 5th, 2014</span>
 
                                         </div>
-                                    </li>
+                                    </li> -->
                                 </ul>
                                 <form class="form-inline" role="form">
                                     <div class="form-group">

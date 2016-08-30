@@ -2,11 +2,12 @@
 
 $(document).ready(function() {
 
+$('.comment-window').hide();
 //global variable 
-var template = `<button class="btn btn-default" id="translate-button">
+var template = `<button class="btn btn-default translate-button">
         <span class='glyphicon glyphicon-transfer' aria-hidden='true'</span></button>` 
         + " " + 
-        `<div class="btn btn-default" id="comment-button">
+        `<div class="btn btn-default comment-button">
         <span class='glyphicon glyphicon-comment' aria-hidden='true'</span></div>`;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -92,26 +93,26 @@ var template = `<button class="btn btn-default" id="translate-button">
 
         }
         
-        function createCommentWindow(){
+        function showCommentWindow(){
             //Get the User's selection
             var textSelection = getText();
             //get the selection object
             var selection = textSelection['selection'];
             //find the position using the selection object
             var position = selection.getRangeAt(0).getBoundingClientRect();
+            var text = textSelection['text'];
 
             //PSEUDO CODE: Send ajax post request to /comment rounte. 
             // $.post("/comment", myinput?? , callbackFunction);
             //the route makes a DB query on the Comments table and gets any 
             //comments related to this phrase and displays it in comment window.
 
-            //started thinking about creating a new comment window everytime that
-            //inherites the qualities from the comment window in the html 
-            var commentWindow = $('#comment-window').html();
-
             //This just moves the comment-window that already exists in the DOM
             //to the position on the same line as the selection. 
             $('#comment-window').offset({top:(position.top) + $(window).scrollTop()});
+            $('.commentReference').html('"'+ text+ '"');
+            $('.comment-sidebar').css('visibility', 'visible');
+            console.log(position);
             //QUESTION: How do I put data returned from server into the html? 
             //Through jinja in article.html file? 
 
@@ -139,18 +140,20 @@ var template = `<button class="btn btn-default" id="translate-button">
         }
 
         function displayComments(comments){
-            console.log(comments);
-            alert(`I am back from the server!! I added the comments to the 
-                database and also have the other comments here.`);
+            comments = JSON.parse(comments);
+
+            // alert(`I am back from the server!! I added the comments to the 
+                // database and also have the other comments here.`);
             //This puts the object itself into the comment fields in the html. 
             $('.commentText').html(comments);
 
 
             //QUESTION: Trying to figure out how to interate over a JSON object that contains
             //all of the comments from the server. Any suggestions? 
-            // for(var i = 0; i<comments.length; i++){
-            //     $('.commentText').html(i.value());
-            // }
+            for(var i = 0; i<comments.length; i++){
+                $('.commentbody').append('does this work');
+                console.log(i);
+            }
         }
             
             
@@ -168,31 +171,38 @@ var template = `<button class="btn btn-default" id="translate-button">
         });
 
 
-        $(document).on('click', '#translate-button', function(){
+        $(document).on('click', '.translate-button', function(){
             var textSelection = getText();
             var text= textSelection['text'];
             // This function calls the showTranslation function. 
             var translatedText = translateText(text);
+            console.log('in the translate click');
         });
 
         $('.article-body').on('mousedown', function(){
             if ($('.popover')){
                 $('.popover').remove();
                 //trying to get the comment-window to go away when click off. Doesnt work. 
-                $('.comment-window').hide();
+                // $('.comment-window').hide();
                 }
         });
 
-        $(document).on('click', '#comment-button', function(){
+        $(document).on('click', '.comment-button', function(){
             $('.popover').remove();
-            createCommentWindow(); 
+            showCommentWindow(); 
             //call some other function here that shows form for comment. 
         });
 
-        $(document).on('click', '#add-comment-button', function(event){
+        $(document).on('click', '#add-comment-button', function(){
             addComment();
-            event.stopPropagation();
+
+            // event.stopPropagation();
         })
+        //Event listener that listens for user to his the 'X' button in the corner
+        //of the comment window. 
+        $(document).on('click', '.close', function(){
+             $('.comment-sidebar').css('visibility', 'hidden');
+        });
 
         //PSEUDO-CODE: User enters a comment into the comment window and clicks
         //"add." This should make a ajax post request to the '/comment' route. 
