@@ -21,13 +21,53 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-1"></div>
 
         <div class="col-lg-3 form-group">
-                <label for="notes">Notes:</label>
-                <a href="/comments">CLICK TO TEST COMMENT</a>
+                <label for="comments">Comment Sidebar:</label>
                 <br>
-                <div class="pull-lg-right" cols= "40" rows="20" id="comment-sidebar"> TESTING</div>
+                <div class="comment-sidebar" cols= "30" rows="20" >
+                    <div class="detailBox" id="comment-window">
+                        <div class="titleBox" data-toggle="collapse">
+                          <label>Comment</label>
+                            <button type="button" class="close" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="commentBox collapse">
+                            
+                            <p class="taskDescription">This should display the text that the comment is referencing.</p>
+                        </div>
+                        <div class="actionBox">
+                            <ul class="commentList">
+                                <li>
+                                    <div class="commenterImage">
+                                      <img src="http://placekitten.com/50/50" />
+                                    </div>
+                                    <div class="commentText">
+                                        <p class="">Hello this is a test comment made by another user.</p> <span class="date sub-text">on March 5th, 2014</span>
+
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="commenterImage">
+                                      <img src="http://placekitten.com/45/45" />
+                                    </div>
+                                    <div class="commentText">
+                                        <p class="">Hello this is a test comment and this comment is also from another user. It is particularly very long and it goes on and on and on.</p> <span class="date sub-text">on March 5th, 2014</span>
+
+                                    </div>
+                                </li>
+                            </ul>
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" placeholder="Your comments" />
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-default">Add</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
                 <br>
 <!--                 <a href="#"><button type="button" class="btn btn-success center-block">Save Notes</button></a>
                 <br>

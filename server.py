@@ -263,9 +263,9 @@ def translating():
 
         return translation
 
-@app.route('/comments')
-def test_comments():
-    return render_template('comment_test.html')
+# @app.route('/comments')
+# def test_comments():
+#     return render_template('comment_test.html')
     
 @app.route('/logout')
 def logout_user():

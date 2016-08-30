@@ -13,14 +13,13 @@
 }
 
 body {
-    background-color: #f6efd6;
-    /*background-color: #000000;*/
+    background-color: #fbfbfb;
     font-family: 'Open Sans', sans-serif;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 div .detailBox {
-    width:320px;
+    width:300px;
     border:1px solid #bbb;
     margin:50px;
 }

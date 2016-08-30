@@ -90,25 +90,18 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
         }
         
         function createComment(){
-            //creates a placeholder div. 
-            // var comment = $('<div>');
-            // comment.data({'content':'<p>this is a test</p>', toggle:'popover', html:true}); 
+            //Get the User's selection
             var textSelection = getText();
+            //get the selection object
             var selection = textSelection['selection'];
+            //find the position using the selection object
             var position = selection.getRangeAt(0).getBoundingClientRect();
 
-            var commentField = `
-                <div class="form-group">
-                    <input class="form-control" type="text" placeholder="Your comments" />
-                </div>
-                <div class="form-group">
-                    <a><button class="btn btn-default">Add</button></a>
-                </div>
-            `;
+            var commentWindow = $('#comment-window').html();
+            $('#comment-window').offset({top:(position.top) + $(window).scrollTop()});
+            $('.comment-sidebar').show();
 
 
-            $('#comment-sidebar').html(commentField).offset({top:(position.top)});
-            console.log('in create comment');
 
         }
         
@@ -134,6 +127,7 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
         $('.article-body').on('mousedown', function(){
             if ($('.popover')){
                 $('.popover').remove();
+                $('.comment-window').hide();
                 }
         });
 
