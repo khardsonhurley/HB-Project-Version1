@@ -96,10 +96,12 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
             var selection = textSelection['selection'];
             //find the position using the selection object
             var position = selection.getRangeAt(0).getBoundingClientRect();
-
+            //started thinking about creating a new comment window everytime that
+            //inherites the qualities from the comment window in the html 
             var commentWindow = $('#comment-window').html();
             $('#comment-window').offset({top:(position.top) + $(window).scrollTop()});
-            $('.comment-sidebar').show();
+            //then show the comment window. Currently this feature does not work.
+            // $('.comment-sidebar').show();
 
 
 
@@ -127,6 +129,7 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
         $('.article-body').on('mousedown', function(){
             if ($('.popover')){
                 $('.popover').remove();
+                //trying to get the comment-window to go away when click off. Doesnt work. 
                 $('.comment-window').hide();
                 }
         });
