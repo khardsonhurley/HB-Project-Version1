@@ -112,7 +112,6 @@ var template = `<button class="btn btn-default" id="translate-button">
             //This just moves the comment-window that already exists in the DOM
             //to the position on the same line as the selection. 
             $('#comment-window').offset({top:(position.top) + $(window).scrollTop()});
-
             //QUESTION: How do I put data returned from server into the html? 
             //Through jinja in article.html file? 
 
