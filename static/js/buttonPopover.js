@@ -3,8 +3,11 @@
 $(document).ready(function() {
 
 //global variable 
-var template = '<button class="btn btn-success" id="translate-button">Translate</button>  ' +
-               '  <div class="btn btn-default" id="comment-button">Comment</div>';
+var template = `<button class="btn btn-default" id="translate-button">
+        <span class='glyphicon glyphicon-transfer' aria-hidden='true'</span></button>` 
+        + " " + 
+        `<div class="btn btn-default" id="comment-button">
+        <span class='glyphicon glyphicon-comment' aria-hidden='true'</span></div>`;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////    FUNCTIONS    ///////////////////////////////
@@ -117,8 +120,6 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
             //wouldnt be necessary until the orginal window is hidden.]
             // $('.comment-sidebar').show();
 
-
-
         }
         
 
@@ -153,6 +154,16 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
             createComment(); 
             //call some other function here that shows form for comment. 
         });
+
+        //PSEUDO-CODE: User enters a comment into the comment window and clicks
+        //"add." This should make a ajax post request to the '/comment' route. 
+        //Adding the comment to the DB and now displaying it as one of the comments.
+
+        //PSEUDO-CODE: Another event listener for when the user clicks off the 
+        //comment window. Comment window collapses into a icon that is located
+        //at the same top position as the selection. Also would like to make 
+        //the selection highlighted a light grey so other users can see that it 
+        //has a comment on it. 
 
 });
 
