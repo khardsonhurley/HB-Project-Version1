@@ -96,11 +96,25 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
             var selection = textSelection['selection'];
             //find the position using the selection object
             var position = selection.getRangeAt(0).getBoundingClientRect();
+
+            //PSEUDO CODE: Send ajax post request to /comment rounte. 
+            // $.post("/comment", myinput?? , callbackFunction);
+            //the route makes a DB query on the Comments table and gets any 
+            //comments related to this phrase and displays it in comment window.
+
             //started thinking about creating a new comment window everytime that
             //inherites the qualities from the comment window in the html 
             var commentWindow = $('#comment-window').html();
+
+            //This just moves the comment-window that already exists in the DOM
+            //to the position on the same line as the selection. 
             $('#comment-window').offset({top:(position.top) + $(window).scrollTop()});
-            //then show the comment window. Currently this feature does not work.
+
+            //QUESTION: How do I put data returned from server into the html? 
+            //Through jinja in article.html file? 
+
+            //Show the comment window. [currently its already showing so this 
+            //wouldnt be necessary until the orginal window is hidden.]
             // $('.comment-sidebar').show();
 
 
