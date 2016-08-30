@@ -91,9 +91,23 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
         
         function createComment(){
             //creates a placeholder div. 
-            var comment = $('<div>');
-            comment.data({'content':'<p>this is a test</p>', toggle:'popover', html:true}); 
-            $('#comment-sidebar').html('this is a test');
+            // var comment = $('<div>');
+            // comment.data({'content':'<p>this is a test</p>', toggle:'popover', html:true}); 
+            var textSelection = getText();
+            var selection = textSelection['selection'];
+            var position = selection.getRangeAt(0).getBoundingClientRect();
+
+            var commentField = `
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Your comments" />
+                </div>
+                <div class="form-group">
+                    <a><button class="btn btn-default">Add</button></a>
+                </div>
+            `;
+
+
+            $('#comment-sidebar').html(commentField).offset({top:(position.top)});
             console.log('in create comment');
 
         }
@@ -103,21 +117,24 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
 /////////////////////////////    EVT LISTENERS    /////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-        $('#article-body').mouseup(function(event){
+        $('.article-body').mouseup(function(event){
             firstPopover();
             console.log('Mouseup')
             event.stopPropagation(); 
         });
+
 
         $(document).on('click', '#translate-button', function(){
             var textSelection = getText();
             var text= textSelection['text'];
             // This function calls the showTranslation function. 
             var translatedText = translateText(text);
-            // $('#article-body').click(function(event){
-            //     $('.popover').remove();    
-            //     event.stopPropagation();
-            // })
+        });
+
+        $('.article-body').on('mousedown', function(){
+            if ($('.popover')){
+                $('.popover').remove();
+                }
         });
 
         $(document).on('click', '#comment-button', function(){
@@ -126,11 +143,6 @@ var template = '<button class="btn btn-success" id="translate-button">Translate<
             //call some other function here that shows form for comment. 
         });
 
-     
-        
-        // $('#comment-button').click(function(event){
-        //     //need to call a function that opens a comment in the comment side-bar.
-        // });
 });
 
  
