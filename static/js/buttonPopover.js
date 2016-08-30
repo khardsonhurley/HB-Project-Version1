@@ -92,7 +92,7 @@ var template = `<button class="btn btn-default" id="translate-button">
 
         }
         
-        function createComment(){
+        function createCommentWindow(){
             //Get the User's selection
             var textSelection = getText();
             //get the selection object
@@ -120,6 +120,42 @@ var template = `<button class="btn btn-default" id="translate-button">
             // $('.comment-sidebar').show();
 
         }
+
+        function addComment(){
+            //Gets the text from the input field. 
+            var inputText= $('input').val();
+
+            var commentInput = {
+                "comment": inputText
+            }
+            //sends an Ajax request to server where the comment should be stored
+            //in the database. The server returns all comments with that comment_id
+            $.post('/comments', commentInput, function(result){
+                //want to now call display comments function which will display
+                //all comments in the comment-window. 
+                displayComments(result);
+            });
+
+        }
+
+        function displayComments(comments){
+            console.log(comments);
+            alert(`I am back from the server!! I added the comments to the 
+                database and also have the other comments here.`);
+            //This puts the object itself into the comment fields in the html. 
+            $('.commentText').html(comments);
+
+
+            //QUESTION: Trying to figure out how to interate over a JSON object that contains
+            //all of the comments from the server. Any suggestions? 
+            // for(var i = 0; i<comments.length; i++){
+            //     $('.commentText').html(i.value());
+            // }
+        }
+            
+            
+
+        
         
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -128,7 +164,6 @@ var template = `<button class="btn btn-default" id="translate-button">
 
         $('.article-body').mouseup(function(event){
             firstPopover();
-            console.log('Mouseup')
             event.stopPropagation(); 
         });
 
@@ -150,9 +185,14 @@ var template = `<button class="btn btn-default" id="translate-button">
 
         $(document).on('click', '#comment-button', function(){
             $('.popover').remove();
-            createComment(); 
+            createCommentWindow(); 
             //call some other function here that shows form for comment. 
         });
+
+        $(document).on('click', '#add-comment-button', function(event){
+            addComment();
+            event.stopPropagation();
+        })
 
         //PSEUDO-CODE: User enters a comment into the comment window and clicks
         //"add." This should make a ajax post request to the '/comment' route. 

@@ -263,10 +263,19 @@ def translating():
 
         return translation
 
-# @app.route('/comments')
-# def test_comments():
-#     return render_template('comment_test.html')
-    
+@app.route('/comments', methods = ["POST"])
+def test_comments():
+    comment = request.form.get('comment')
+    print "\n\n\n\n\n\n %s \n\n\n\n\n\n" % comment
+    #Add the comment to the database. 
+
+    #Get all comments from the database, send as JSON. 
+    allcomments = {'comment1':'This is comment#1', 'comment2':'This is comment#2'}
+
+    allcomments = json.dumps(allcomments)
+
+    return allcomments
+
 @app.route('/logout')
 def logout_user():
     """Log out the user and delete user from session"""
