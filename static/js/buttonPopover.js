@@ -135,23 +135,26 @@ var template = `<button class="btn btn-default translate-button">
                 //want to now call display comments function which will display
                 //all comments in the comment-window. 
                 displayComments(result);
+                console.log('I am in the ajax call')
             });
 
         }
 
-        function displayComments(comments){
-            comments = JSON.parse(comments);
+        function displayComments(result){
+            // comments = JSON.parse(comments);
+            var comments = result.commentData
+            console.log(comments);
 
             // alert(`I am back from the server!! I added the comments to the 
                 // database and also have the other comments here.`);
             //This puts the object itself into the comment fields in the html. 
-            $('.commentText').html(comments);
+            // $('.commentText').html('Testing!');
 
 
             //QUESTION: Trying to figure out how to interate over a JSON object that contains
             //all of the comments from the server. Any suggestions? 
             for(var i = 0; i<comments.length; i++){
-                $('.commentbody').append('does this work');
+                $('.commentText').html(i);
                 console.log(i);
             }
         }
@@ -193,10 +196,9 @@ var template = `<button class="btn btn-default translate-button">
             //call some other function here that shows form for comment. 
         });
 
-        $(document).on('click', '#add-comment-button', function(){
+        $(document).on('click', '#add-comment-button', function(event){
             addComment();
-
-            // event.stopPropagation();
+            event.stopPropagation(event);
         })
         //Event listener that listens for user to his the 'X' button in the corner
         //of the comment window. 

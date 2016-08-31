@@ -8,7 +8,7 @@ by: Krishelle Hardson-Hurley
 
 from jinja2 import StrictUndefined
 
-from flask import (Flask, render_template, redirect, request, flash, session)
+from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -268,13 +268,14 @@ def test_comments():
     comment = request.form.get('comment')
     print "\n\n\n\n\n\n %s \n\n\n\n\n\n" % comment
     #Add the comment to the database. 
-
+    user_id = session.get('user_id')
     #Get all comments from the database, send as JSON. 
-    allcomments = {'comment1':'This is comment#1', 'comment2':'This is comment#2'}
+    commentData = [user_id, comment]
 
-    allcomments = json.dumps(allcomments)
+    # allcomments = json.dumps(allcomments)
 
-    return allcomments
+    # return allcomments
+    return jsonify(commentData=commentData)
 
 @app.route('/logout')
 def logout_user():
