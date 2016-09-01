@@ -191,7 +191,6 @@ def article(article_id):
     #Remove an article_id that is in the session and replace it with new 
     #article_id, note that if you return to the same article, its okay becuase
     #article_id will keep it honest since it never changes. 
-    del session['article_id'] 
     session["article_id"] = article_id
 
     return render_template("article.html", article=articleobj)
@@ -265,16 +264,25 @@ def translating():
 
 @app.route('/comments', methods = ["POST"])
 def test_comments():
-    comment = request.form.get('comment')
-    print "\n\n\n\n\n\n %s \n\n\n\n\n\n" % comment
+    comment2 = request.form.get('comment')
+    comment1= 'Here is the second comment'
+
     #Add the comment to the database. 
     user_id = session.get('user_id')
+    
+    user = User.query.get(user_id)
+    
+    user_name2=user.first_name
+    user_name1='secondUser'
+
+    image2 = '/static/img/Daisy.png'
+    image1 = '/static/img/ParrotLogo.png'
+
     #Get all comments from the database, send as JSON. 
-    commentData = [user_id, comment]
+    commentData = [{'userName': user_name1, 'userComment': comment1, 'userImage': image1}, {'userName': user_name2, 'userComment': comment2, 'userImage': image2}]
 
-    # allcomments = json.dumps(allcomments)
 
-    # return allcomments
+    print "\n\n\n\n\n\n %s \n\n\n\n\n\n" % commentData
     return jsonify(commentData=commentData)
 
 @app.route('/logout')

@@ -2,13 +2,13 @@
 
 $(document).ready(function() {
 
-$('.comment-window').hide();
-//global variable 
-var template = `<button class="btn btn-default translate-button">
-        <span class='glyphicon glyphicon-transfer' aria-hidden='true'</span></button>` 
-        + " " + 
-        `<div class="btn btn-default comment-button">
-        <span class='glyphicon glyphicon-comment' aria-hidden='true'</span></div>`;
+    $('.comment-window').hide();
+    //global variable 
+    var template = `<button class="btn btn-default translate-button">
+            <span class='glyphicon glyphicon-transfer' aria-hidden='true'</span></button>` 
+            + " " + 
+            `<div class="btn btn-default comment-button">
+            <span class='glyphicon glyphicon-comment' aria-hidden='true'</span></div>`;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////    FUNCTIONS    ///////////////////////////////
@@ -101,30 +101,24 @@ var template = `<button class="btn btn-default translate-button">
             //find the position using the selection object
             var position = selection.getRangeAt(0).getBoundingClientRect();
             var text = textSelection['text'];
-
-            //PSEUDO CODE: Send ajax post request to /comment rounte. 
-            // $.post("/comment", myinput?? , callbackFunction);
-            //the route makes a DB query on the Comments table and gets any 
-            //comments related to this phrase and displays it in comment window.
+            
+            //NEED TO SEND REQUEST TO GET EXISTING COMMENTS ON A SELECTION. 
 
             //This just moves the comment-window that already exists in the DOM
             //to the position on the same line as the selection. 
             $('#comment-window').offset({top:(position.top) + $(window).scrollTop()});
             $('.commentReference').html('"'+ text+ '"');
             $('.comment-sidebar').css('visibility', 'visible');
-            console.log(position);
-            //QUESTION: How do I put data returned from server into the html? 
-            //Through jinja in article.html file? 
 
-            //Show the comment window. [currently its already showing so this 
-            //wouldnt be necessary until the orginal window is hidden.]
-            // $('.comment-sidebar').show();
 
         }
 
-        function addComment(){
+        function addComment(evt){
+            evt.preventDefault();
             //Gets the text from the input field. 
             var inputText= $('input').val();
+            //removes input value
+            $('input').val("");
 
             var commentInput = {
                 "comment": inputText
@@ -132,31 +126,43 @@ var template = `<button class="btn btn-default translate-button">
             //sends an Ajax request to server where the comment should be stored
             //in the database. The server returns all comments with that comment_id
             $.post('/comments', commentInput, function(result){
-                //want to now call display comments function which will display
-                //all comments in the comment-window. 
                 displayComments(result);
-                console.log('I am in the ajax call')
             });
-
         }
 
+        
         function displayComments(result){
-            // comments = JSON.parse(comments);
-            var comments = result.commentData
-            console.log(comments);
 
-            // alert(`I am back from the server!! I added the comments to the 
-                // database and also have the other comments here.`);
-            //This puts the object itself into the comment fields in the html. 
-            // $('.commentText').html('Testing!');
+            var commentObject = result.commentData
 
+            for(var i=0; i<commentObject.length; i++){
+                var comment = commentObject[i]['userComment'];
+                console.log(comment);
+                var image = commentObject[i]['userImage'];
+                var userName = commentObject[i]['userName'];
+                var htmlComment = formatComment(image, userName, comment);
+                $('.commentTemplate').append(htmlComment);
 
-            //QUESTION: Trying to figure out how to interate over a JSON object that contains
-            //all of the comments from the server. Any suggestions? 
-            for(var i = 0; i<comments.length; i++){
-                $('.commentText').html(i);
-                console.log(i);
             }
+        }
+
+        function formatComment(imageUrl, userName, comment){
+                console.log('in the format');
+                var htmlComment= `<li class="">
+                    <div class="commenterImage">
+                    <img class= "userImage" src=` + imageUrl +
+                    `/>
+                    </div>
+                <div class="commentText">
+                    <h6 class='userName'>` + userName + `</h6>
+                    <p class="commentBody">` + comment + `</p>
+                    <span class="date sub-text">
+                    </span>
+                </div>
+                </li>`
+
+                return htmlComment;
+
         }
             
             
@@ -185,8 +191,6 @@ var template = `<button class="btn btn-default translate-button">
         $('.article-body').on('mousedown', function(){
             if ($('.popover')){
                 $('.popover').remove();
-                //trying to get the comment-window to go away when click off. Doesnt work. 
-                // $('.comment-window').hide();
                 }
         });
 
@@ -196,14 +200,12 @@ var template = `<button class="btn btn-default translate-button">
             //call some other function here that shows form for comment. 
         });
 
-        $(document).on('click', '#add-comment-button', function(event){
-            addComment();
-            event.stopPropagation(event);
-        })
+        $(document).on('click', '#add-comment-button', addComment);
         //Event listener that listens for user to his the 'X' button in the corner
         //of the comment window. 
         $(document).on('click', '.close', function(){
              $('.comment-sidebar').css('visibility', 'hidden');
+             $('.commentTemplate').html("");
         });
 
         //PSEUDO-CODE: User enters a comment into the comment window and clicks
