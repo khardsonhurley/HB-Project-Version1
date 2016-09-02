@@ -84,3 +84,6 @@ div .detailBox {
     border-top:1px dotted #bbb;
     padding:10px;
 }
+.commentedText{
+    background-color: #DCDCDC;
+}

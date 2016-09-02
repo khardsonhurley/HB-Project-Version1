@@ -8,7 +8,9 @@ $(document).ready(function() {
             <span class='glyphicon glyphicon-transfer' aria-hidden='true'</span></button>` 
             + " " + 
             `<div class="btn btn-default comment-button">
-            <span class='glyphicon glyphicon-comment' aria-hidden='true'</span></div>`;
+            <span class='glyphicon glyphicon-comment' aria-hidden='true'</span></div>`+ " "+
+            `<div class="btn btn-default twilio-button">
+            <span class='glyphicon glyphicon-send' aria-hidden='true'</span></div>`;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////    FUNCTIONS    ///////////////////////////////
@@ -48,6 +50,7 @@ $(document).ready(function() {
             //of the class ClientRect that has all information about the position
             //of the rectangle placed around the selection. 
             var position = selection.getRangeAt(0).getBoundingClientRect();
+            console.log(position);
             var thePopover = $('<span>');
             var length = selection.toString().length
 
@@ -100,16 +103,55 @@ $(document).ready(function() {
             var selection = textSelection['selection'];
             //find the position using the selection object
             var position = selection.getRangeAt(0).getBoundingClientRect();
+            
             var text = textSelection['text'];
             
-            //NEED TO SEND REQUEST TO GET EXISTING COMMENTS ON A SELECTION. 
-
             //This just moves the comment-window that already exists in the DOM
             //to the position on the same line as the selection. 
             $('#comment-window').offset({top:(position.top) + $(window).scrollTop()});
             $('.commentReference').html('"'+ text+ '"');
             $('.comment-sidebar').css('visibility', 'visible');
 
+            addCommentFormatting(selection); 
+
+
+        }
+
+        function addCommentFormatting(selection){
+
+            var startOfSelection = selection.getRangeAt(0)['startOffset']; 
+
+            var endOfSelection = selection.getRangeAt(0)['endOffset']; 
+
+            var articleText = $('#article-text').html();
+
+            // var slicedText = articleText.slice(0, startOfSelection) + 
+            // commentOpenTag + articleText.slice(startOfSelection, endOfSelection)+ 
+            // commentCloseTag + articleText.slice(endOfSelection);
+
+
+            // var commentOpenTag = '<span class="commentedText">';
+            var openSpanTag = '<span>'
+            var commentOpenTag = '<span class="commentedText">';
+
+            // commentSpan.attr({'class':'commentedText'})
+
+            // commentSpan.append(articleText.slice(startOfSelection, endOfSelection));
+
+
+            // commentOpenTag.data({'class': 'commentedText'});
+
+            var closeTag = '</span>'
+            
+            var slicedText = openSpanTag + articleText.slice(0, startOfSelection) + closeTag
+            commentOpenTag + articleText.slice(startOfSelection, endOfSelection)+ 
+            closeTag + openSpanTag + articleText.slice(endOfSelection)+ closeTag;
+
+            // console.log(slicedText);
+
+                            
+            $('#article-text').replaceWith(slicedText);
+            // console.log($('#article-text').children());
 
         }
 
@@ -137,7 +179,6 @@ $(document).ready(function() {
 
             for(var i=0; i<commentObject.length; i++){
                 var comment = commentObject[i]['userComment'];
-                console.log(comment);
                 var image = commentObject[i]['userImage'];
                 var userName = commentObject[i]['userName'];
                 var htmlComment = formatComment(image, userName, comment);
@@ -147,7 +188,7 @@ $(document).ready(function() {
         }
 
         function formatComment(imageUrl, userName, comment){
-                console.log('in the format');
+
                 var htmlComment= `<li class="">
                     <div class="commenterImage">
                     <img class= "userImage" src=` + imageUrl +

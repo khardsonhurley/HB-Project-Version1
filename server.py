@@ -30,7 +30,7 @@ import urllib
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
-app.secret_key = "ABC"
+app.secret_key = "7hsfbiksf82083208hdbousf792389kjnkjbfsvpomysrtrc"
 
 #Google translate key for API
 key = os.environ['GOOGLE_TRANSLATE_KEY']
@@ -195,6 +195,7 @@ def article(article_id):
 
     return render_template("article.html", article=articleobj)
 
+
 @app.route('/category/<category_code>')
 def category(category_code):
     """Page where many articles from one category are displayed.""" 
@@ -265,7 +266,7 @@ def translating():
 @app.route('/comments', methods = ["POST"])
 def test_comments():
     comment2 = request.form.get('comment')
-    comment1= 'Here is the second comment'
+    comment1= 'Here is the comment from the server!'
 
     #Add the comment to the database. 
     user_id = session.get('user_id')
@@ -312,7 +313,7 @@ def add_phrase_to_db(phrase,translation):
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-    app.debug = True
+    app.debug = False 
 
     connect_to_db(app)
 
